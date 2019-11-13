@@ -31,15 +31,15 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         """ Called every frame of the game (1/GAME_SPEED times per second)"""
 
     def on_key_press(self, symbol: int, modifiers: int):
-        if symbol == arcade.key.D:
+        if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
             self.frogsprite_list[0].change_x = MOVEMENT_SPEED
-        elif symbol == arcade.key.A:
+        elif symbol == arcade.key.A or symbol == arcade.key.LEFT:
             self.frogsprite_list[0].change_x = -MOVEMENT_SPEED
 
     def on_key_release(self, symbol: int, modifiers: int):
-        if symbol == arcade.key.D:
+        if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
             self.body.change_x = 0
-        elif symbol == arcade.key.A:
+        elif symbol == arcade.key.A or symbol == arcade.key.LEFT:
             self.body.change_x = 0
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
