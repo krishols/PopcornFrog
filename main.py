@@ -23,6 +23,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         """ Called when it is time to draw the world """
         arcade.start_render()
         self.frogsprite_list.draw()
+        arcade.draw_line(*self.body.tongue_args)
 
     def on_update(self, delta_time):
         self.frogsprite_list[0].update()
@@ -40,6 +41,10 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
             self.body.change_x = 0
         elif symbol == arcade.key.A:
             self.body.change_x = 0
+
+    def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
+        self.body.tongue_end_x = x
+        self.body.tongue_end_y = y
 
 
 
