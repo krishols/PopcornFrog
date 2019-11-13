@@ -12,15 +12,21 @@ class FrogBody(arcade.Sprite):
         self.change_x = 0
         self.tongue_end_x = self.center_x + 100
         self.tongue_end_y = self.center_y + 100
-        self.tongue_args =  [
+        self.tongue_args =\
+        [
+            # x start
             self.center_x,
+            # y start
             self.center_y,
+            # x end
             self.tongue_end_x,
+            # y end
             self.tongue_end_y,
+            # color
             [255, 192, 203],
+            # line width
             5
         ]
-
 
     def update(self):
         self.center_x += self.change_x
