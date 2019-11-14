@@ -1,5 +1,4 @@
 import arcade
-import arcade
 from CONSTANTS import *
 from Frog import FrogBody
 from Popcorn import Popcorn
@@ -8,7 +7,7 @@ import arcade.key
 
 
 class MovieTheaterFrog(arcade.Window, FrogBody):
-    def __init__(self):
+    def __init__(self, x=0, y=0):
         """ Initialize variables """
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE)
         self.frogsprite_list = None
@@ -16,6 +15,9 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.body = None
         self.timer = 1
         self.popcorn_counter = 0
+        self.tongue_end_x = x
+        self.tongue_end_y = y
+
 
     def setup(self):
         """ Setup the game (or reset the game) """
@@ -43,6 +45,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         if self.timer % 100 == 0:
             self.popcorn_counter += 1
             self.popsprite_list.append(Popcorn())
+            print(self.popcorn_counter)
             self.popsprite_list[self.popcorn_counter].center_x = randint(0,WINDOW_WIDTH)
 
     def update_timer(self):
@@ -53,7 +56,10 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
 
 
 
-        """ Called every frame of the game (1/GAME_SPEED times per second)"""
+
+
+
+            """ Called every frame of the game (1/GAME_SPEED times per second)"""
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
@@ -70,6 +76,11 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.body.tongue_end_x = x
         self.body.tongue_end_y = y
+        copy_of_popcorn=self.popsprite_list[:]
+        for popcorn in copy_of_popcorn:
+            if popcorn.collides_with_point([x, y]):
+                popcorn.remove_from_sprite_lists()
+                self.popcorn_counter-=1
 
 
 
