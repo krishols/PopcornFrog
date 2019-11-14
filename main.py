@@ -17,6 +17,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.popcorn_counter = 0
         self.tongue_end_x = x
         self.tongue_end_y = y
+        self.score = 0
 
 
     def setup(self):
@@ -34,6 +35,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.frogsprite_list.draw()
         arcade.draw_line(*self.body.tongue_args)
         self.popsprite_list.draw()
+        arcade.draw_text(str(self.score), 0, 0, arcade.color.WHITE_SMOKE, 50)
 
     def on_update(self, delta_time):
         self.frogsprite_list[0].update()
@@ -45,7 +47,6 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         if self.timer % 100 == 0:
             self.popcorn_counter += 1
             self.popsprite_list.append(Popcorn())
-            print(self.popcorn_counter)
             self.popsprite_list[self.popcorn_counter].center_x = randint(0,WINDOW_WIDTH)
 
     def update_timer(self):
@@ -81,6 +82,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
             if popcorn.collides_with_point([x, y]):
                 popcorn.remove_from_sprite_lists()
                 self.popcorn_counter-=1
+                self.score += 1
 
 
 
