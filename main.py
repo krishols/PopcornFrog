@@ -3,6 +3,7 @@ from CONSTANTS import *
 from Frog import FrogBody
 from Popcorn import Popcorn
 from random import randint
+from Candy import CandyFall
 import arcade.key
 
 
@@ -20,15 +21,21 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.popcorn = []
         self.tongue_end_x = x
         self.tongue_end_y = y
+        self.score = 0
+        self.candysprite_list = None
+        self.candy_counter = 0
 
     def setup(self):
         """ Setup the game (or reset the game) """
         arcade.set_background_color(BACKGROUND_COLOR)
         self.frogsprite_list = arcade.SpriteList()
         self.popsprite_list = arcade.SpriteList()
+        self.candysprite_list = arcade.SpriteList()
+        self.candysprite_list.append(CandyFall())
         self.frogsprite_list.append(FrogBody())
         self.popsprite_list.append(Popcorn())
         self.body = self.frogsprite_list[0]
+
 
 
 
@@ -38,13 +45,17 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.frogsprite_list.draw()
         arcade.draw_line(*self.body.tongue_args)
         self.popsprite_list.draw()
+        self.candysprite_list.draw()
+        arcade.draw_text(str(self.score), 0, 0, arcade.color.WHITE_SMOKE, 50)
 
 
     def on_update(self, delta_time):
         self.frogsprite_list[0].update()
         self.popsprite_list.update()
+        self.candysprite_list.update()
         self.spawn_popcorn()
         self.update_timer()
+        self.spawn_candy()
 
 
     def spawn_popcorn(self):
@@ -52,6 +63,14 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
             self.popcorn_counter += 1
             self.popsprite_list.append(Popcorn())
             self.popsprite_list[self.popcorn_counter].center_x = randint(0,WINDOW_WIDTH)
+
+    def spawn_candy(self):
+        if self.timer % 100 == 0:
+            print("HELP")
+            self.candy_counter += 1
+            self.candysprite_list.append(CandyFall())
+            self.candysprite_list[self.candy_counter].center_x = randint(0,WINDOW_WIDTH)
+
 
     def update_timer(self):
         if self.timer < TIMER_MAX:
@@ -82,6 +101,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
             if popcorn.collides_with_point([x, y]):
                 popcorn.remove_from_sprite_lists()
                 self.popcorn_counter-=1
+                self.score += 1
 
 
 def main():

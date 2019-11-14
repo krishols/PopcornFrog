@@ -6,6 +6,7 @@ GAME_TITLE = "Popcorn Frog"
 GAME_SPEED = 1/60
 FROG = arcade.load_texture("images/cutepixelfrog_16x16.gif", scale = 3)
 POPCORN = arcade.load_texture("images/popcorn.png")
+CANDY = arcade.load_texture("images/blob.png", scale = .125)
 MOVEMENT_SPEED = 5
 FALL_SPEED = 1
 MAX_LENGTH = 100
