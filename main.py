@@ -1,5 +1,6 @@
 import arcade
 import arcade
+from arcade import geometry
 from CONSTANTS import *
 from Frog import FrogBody
 from Popcorn import Popcorn
@@ -7,7 +8,7 @@ from random import randint
 import arcade.key
 
 
-class MovieTheaterFrog(arcade.Window, FrogBody):
+class MovieTheaterFrog(arcade.Window, FrogBody, ):
     def __init__(self):
         """ Initialize variables """
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE)
@@ -16,6 +17,8 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.body = None
         self.timer = 1
         self.popcorn_counter = 0
+        self.score = 0
+        self.popcorn = []
 
     def setup(self):
         """ Setup the game (or reset the game) """
@@ -26,6 +29,8 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.popsprite_list.append(Popcorn())
         self.body = self.frogsprite_list[0]
 
+
+
     def on_draw(self):
         """ Called when it is time to draw the world """
         arcade.start_render()
@@ -33,11 +38,13 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         arcade.draw_line(*self.body.tongue_args)
         self.popsprite_list.draw()
 
+
     def on_update(self, delta_time):
         self.frogsprite_list[0].update()
         self.popsprite_list.update()
         self.spawn_popcorn()
         self.update_timer()
+
 
     def spawn_popcorn(self):
         if self.timer % 100 == 0:
@@ -50,8 +57,6 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
             self.timer += 1
         else:
             self.timer = 1
-
-
 
         """ Called every frame of the game (1/GAME_SPEED times per second)"""
 
@@ -70,6 +75,17 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.body.tongue_end_x = x
         self.body.tongue_end_y = y
+
+
+
+
+
+
+
+
+
+
+
 
 
 
