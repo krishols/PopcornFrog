@@ -10,4 +10,4 @@ CANDY = arcade.load_texture("images/blob.png", scale = .125)
 MOVEMENT_SPEED = 5
 FALL_SPEED = 1
 MAX_LENGTH = 100
-TIMER_MAX = 100
+TIMER_MAX = 300

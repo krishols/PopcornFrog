@@ -65,8 +65,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
             self.popsprite_list[self.popcorn_counter].center_x = randint(0,WINDOW_WIDTH)
 
     def spawn_candy(self):
-        if self.timer % 100 == 0:
-            print("HELP")
+        if self.timer % 300 == 0:
             self.candy_counter += 1
             self.candysprite_list.append(CandyFall())
             self.candysprite_list[self.candy_counter].center_x = randint(0,WINDOW_WIDTH)
@@ -96,12 +95,19 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.body.tongue_end_x = x
         self.body.tongue_end_y = y
-        copy_of_popcorn=self.popsprite_list[:]
+        copy_of_popcorn = self.popsprite_list[:]
+        copy_of_candy = self.candysprite_list[:]
         for popcorn in copy_of_popcorn:
             if popcorn.collides_with_point([x, y]):
                 popcorn.remove_from_sprite_lists()
-                self.popcorn_counter-=1
+                self.popcorn_counter -= 1
                 self.score += 1
+        for candy in copy_of_candy:
+            if candy.collides_with_point([x, y]):
+                candy.remove_from_sprite_lists()
+                self.candy_counter -= 1
+                self.score -= 1
+
 
 
 def main():
