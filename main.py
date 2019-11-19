@@ -64,6 +64,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
             self.popsprite_list.append(Popcorn())
             self.popsprite_list[self.popcorn_counter].center_x = randint(0,WINDOW_WIDTH)
 
+
     def spawn_candy(self):
         if self.timer % 300 == 0:
             self.candy_counter += 1
@@ -100,6 +101,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         for popcorn in copy_of_popcorn:
             if popcorn.collides_with_point([x, y]):
                 popcorn.remove_from_sprite_lists()
+                arcade.play_sound(MUNCH_SOUND)
                 self.popcorn_counter -= 1
                 self.score += 1
         for candy in copy_of_candy:
