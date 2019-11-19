@@ -26,6 +26,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.candy_counter = 0
         self.off_counter = 0
         self.progress_end = 0
+        self.level = 1
 
     def setup(self):
         """ Setup the game (or reset the game) """
@@ -38,9 +39,6 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.popsprite_list.append(Popcorn())
         self.body = self.frogsprite_list[0]
 
-
-
-
     def on_draw(self):
         """ Called when it is time to draw the world """
         arcade.start_render()
@@ -50,7 +48,6 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.candysprite_list.draw()
         arcade.draw_text(str(self.score), 0, 0, arcade.color.WHITE_SMOKE, 50)
         arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=self.progress_end, line_width=10, color= [50,205,50])
-
 
     def on_update(self, delta_time):
         self.frogsprite_list[0].update()
@@ -62,20 +59,17 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.off_screen_counter()
         self.progress_bar()
 
-
     def spawn_popcorn(self):
         if self.timer % 100 == 0:
             self.popcorn_counter += 1
             self.popsprite_list.append(Popcorn())
             self.popsprite_list[self.popcorn_counter].center_x = randint(0,WINDOW_WIDTH)
 
-
     def spawn_candy(self):
         if self.timer % 300 == 0:
             self.candy_counter += 1
             self.candysprite_list.append(CandyFall())
             self.candysprite_list[self.candy_counter].center_x = randint(0,WINDOW_WIDTH)
-
 
     def update_timer(self):
         if self.timer < TIMER_MAX:
@@ -93,18 +87,41 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
             print(self.off_counter)
 
     def progress_bar(self):
-        if self.score == 1:
-            self.progress_end = 100
-        elif self.score == 2:
-            self.progress_end = 200
-        elif self.score == 3:
-            self.progress_end = 300
-        elif self.score == 4:
-            self.progress_end = 400
-        elif self.score == 5:
-            self.progress_end = 500
-
-
+        if self.level == 1:
+            if self.score == 1:
+                self.progress_end = 100
+            elif self.score == 2:
+                self.progress_end = 200
+            elif self.score == 3:
+                self.progress_end = 300
+            elif self.score == 4:
+                self.progress_end = 400
+            elif self.score == 5:
+                self.progress_end = 500
+                self.level = 2
+                self.progress_end = 0
+                self.score = 0
+        if self.level == 2:
+            if self.score == 1:
+                self.progress_end = 50
+            elif self.score == 2:
+                self.progress_end = 100
+            elif self.score == 3:
+                self.progress_end = 150
+            elif self.score == 4:
+                self.progress_end = 200
+            elif self.score == 5:
+                self.progress_end = 250
+            elif self.score == 6:
+                self.progress_end = 300
+            elif self.score == 7:
+                self.progress_end = 350
+            elif self.score == 8:
+                self.progress_end = 400
+            elif self.score == 9:
+                self.progress_end = 450
+            elif self.score == 10:
+                self.progress_end = 500
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
