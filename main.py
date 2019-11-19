@@ -24,6 +24,8 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.score = 0
         self.candysprite_list = None
         self.candy_counter = 0
+        self.off_counter = 0
+        self.progress_end = 0
 
     def setup(self):
         """ Setup the game (or reset the game) """
@@ -47,6 +49,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.popsprite_list.draw()
         self.candysprite_list.draw()
         arcade.draw_text(str(self.score), 0, 0, arcade.color.WHITE_SMOKE, 50)
+        arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=self.progress_end, line_width=10, color= [50,205,50])
 
 
     def on_update(self, delta_time):
@@ -56,6 +59,8 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.spawn_popcorn()
         self.update_timer()
         self.spawn_candy()
+        self.off_screen_counter()
+        self.progress_bar()
 
 
     def spawn_popcorn(self):
@@ -78,8 +83,28 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         else:
             self.timer = 1
 
+    def off_screen_counter(self):
+        copy_of_counter = self.popsprite_list[:]
+        for popcorn in copy_of_counter:
+            if popcorn.off_screen_test():
+                self.off_counter += 1
+                popcorn.remove_from_sprite_lists()
+                self.popcorn_counter -= 1
+            print(self.off_counter)
 
-            """ Called every frame of the game (1/GAME_SPEED times per second)"""
+    def progress_bar(self):
+        if self.score == 1:
+            self.progress_end = 100
+        elif self.score == 2:
+            self.progress_end = 200
+        elif self.score == 3:
+            self.progress_end = 300
+        elif self.score == 4:
+            self.progress_end = 400
+        elif self.score == 5:
+            self.progress_end = 500
+
+
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
