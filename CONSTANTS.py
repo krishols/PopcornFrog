@@ -12,3 +12,4 @@ FALL_SPEED = 1
 MAX_LENGTH = 100
 TIMER_MAX = 300
 MUNCH_SOUND = arcade.load_sound("sounds/munch.wav")
+YUCK_SOUND = arcade.load_sound("sounds/yuck.mp3")

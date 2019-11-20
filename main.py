@@ -84,7 +84,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
                 self.off_counter += 1
                 popcorn.remove_from_sprite_lists()
                 self.popcorn_counter -= 1
-            print(self.off_counter)
+
 
     def progress_bar(self):
         if self.level == 1:
@@ -149,6 +149,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         for candy in copy_of_candy:
             if candy.collides_with_point([x, y]):
                 candy.remove_from_sprite_lists()
+                arcade.play_sound(YUCK_SOUND)
                 self.candy_counter -= 1
                 self.score -= 1
 
