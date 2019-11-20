@@ -9,7 +9,7 @@ import arcade.key
 
 
 
-class MovieTheaterFrog(arcade.Window, FrogBody):
+class MovieTheaterFrog(arcade.Window):
     def __init__(self, x=0, y=0):
         """ Initialize variables """
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE)
@@ -32,6 +32,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.progress_end = 0
         self.level = 1
         self.hand1_counter = 0
+        self.hand2_counter = 0
 
     def setup(self):
         """ Setup the game (or reset the game) """
@@ -65,6 +66,8 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         arcade.draw_text(str(self.score), 0, 0, arcade.color.WHITE_SMOKE, 50)
         arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=self.progress_end, line_width=10, color= [50,205,50])
 
+
+
     def on_update(self, delta_time):
         self.frogsprite_list[0].update()
         self.popsprite_list.update()
@@ -72,9 +75,11 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         if self.level in BOSS_BATTLES:
             self.handsprite_list[0].update()
             self.hand_movement()
+            self.hand1_reset()
             if self.level == FINAL_BATTLE:
                 self.handsprite_list[1].update()
                 self.hand_movement()
+                self.hand2_reset()
         self.spawn_popcorn()
         self.update_timer()
         self.spawn_candy()
@@ -168,8 +173,19 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
                 else:
                     self.hand2.change_y = 5
 
+    def hand1_reset(self):
+        if self.hand1.center_y <= 0:
+            if self.hand1_counter == 2:
+                self.level += 1
+                self.hand1_counter = 0
+            else:
+                self.hand1_counter += 1
+                self.hand1.center_y = WINDOW_HEIGHT
+                self.hand1.change_y =1
 
-
+    def hand2_reset(self):
+        if self.hand2.center_y <= 0:
+            self.hand2.center_y = WINDOW_HEIGHT
 
 
 

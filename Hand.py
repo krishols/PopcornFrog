@@ -21,3 +21,5 @@ class HandBoss(arcade.Sprite):
         self.center_y -= self.change_y
 
 
+
+
