@@ -29,6 +29,7 @@ class MovieTheaterFrog(arcade.Window):
         self.candysprite_list = None
         self.candy_counter = 0
         self.off_counter = 0
+        self.popcorn_missed_bar = 0
         self.progress_end = 0
         self.level = 1
         self.hand1_counter = 0
@@ -50,7 +51,7 @@ class MovieTheaterFrog(arcade.Window):
         self.body = self.frogsprite_list[0]
         self.hand1 = self.handsprite_list[0]
         self.hand2 = self.handsprite_list[1]
-        self.level = 9
+        self.level = 1
         self.hand1_counter = 0
 
     def on_draw(self):
@@ -65,7 +66,7 @@ class MovieTheaterFrog(arcade.Window):
                 self.hand1.draw()
                 if self.level == FINAL_BATTLE:
                     self.hand2.draw()
-            arcade.draw_text(str(self.score), 0, 0, arcade.color.WHITE_SMOKE, 50)
+            arcade.draw_line(start_x=490, start_y=10, end_x=490, end_y=self.progress_end, line_width=10, color = arcade.color.YELLOW)
             arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=self.progress_end, line_width=10, color= [50,205,50])
         elif self.end_game:
             arcade.draw_text("Game over! You were caught!", start_x=60, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
@@ -74,6 +75,9 @@ class MovieTheaterFrog(arcade.Window):
 
 
     def on_update(self, delta_time):
+        if self.progress_end == 500:
+            self.level += 1
+            self.progress_end = 0
         self.frogsprite_list[0].update()
         self.popsprite_list.update()
         self.candysprite_list.update()
@@ -89,7 +93,6 @@ class MovieTheaterFrog(arcade.Window):
         self.update_timer()
         self.spawn_candy()
         self.off_screen_counter()
-        self.progress_bar()
         self.on_draw()
         self.hand_collisions()
 
@@ -120,44 +123,6 @@ class MovieTheaterFrog(arcade.Window):
                 self.off_counter += 1
                 popcorn.remove_from_sprite_lists()
                 self.popcorn_counter -= 1
-
-    def progress_bar(self):
-        if self.level == 1:
-            if self.score == 1:
-                self.progress_end = 100
-            elif self.score == 2:
-                self.progress_end = 200
-            elif self.score == 3:
-                self.progress_end = 300
-            elif self.score == 4:
-                self.progress_end = 400
-            elif self.score == 5:
-                self.progress_end = 500
-                self.level = 2
-                self.progress_end = 0
-                self.score = 0
-        if self.level == 2:
-            if self.score == 1:
-                self.progress_end = 50
-            elif self.score == 2:
-                self.progress_end = 100
-            elif self.score == 3:
-                self.progress_end = 150
-            elif self.score == 4:
-                self.progress_end = 200
-            elif self.score == 5:
-                self.progress_end = 250
-            elif self.score == 6:
-                self.progress_end = 300
-            elif self.score == 7:
-                self.progress_end = 350
-            elif self.score == 8:
-                self.progress_end = 400
-            elif self.score == 9:
-                self.progress_end = 450
-            elif self.score == 10:
-                self.progress_end = 500
-                self.level = 3
 
     def hand_movement(self):
         if self.level in BOSS_BATTLES:
@@ -223,12 +188,20 @@ class MovieTheaterFrog(arcade.Window):
                 arcade.play_sound(MUNCH_SOUND)
                 self.popcorn_counter -= 1
                 self.score += 1
+                if self.level == 1:
+                    self.progress_end += 100
+                elif self.level == 2:
+                    self.progress_end += 50
         for candy in copy_of_candy:
             if candy.collides_with_point([x, y]):
                 candy.remove_from_sprite_lists()
                 arcade.play_sound(YUCK_SOUND)
                 self.candy_counter -= 1
                 self.score -= 1
+               if self.level == 1:
+                   self.progress_end-=100
+               elif self.level ==2:
+                   self.progress_end-=50
 
 
 

@@ -10,6 +10,7 @@ class HandBoss(arcade.Sprite):
         self.texture = HAND
         self.change_x = MOVEMENT_SPEED
         self.change_y = 1
+        self.scale = 2.25
 
     def move_right(self):
         self.center_x += self.change_x
