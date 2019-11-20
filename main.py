@@ -49,7 +49,7 @@ class MovieTheaterFrog(arcade.Window):
         self.body = self.frogsprite_list[0]
         self.hand1 = self.handsprite_list[0]
         self.hand2 = self.handsprite_list[1]
-        self.level = 9
+        self.level = 2
         self.hand1_counter = 0
 
     def on_draw(self):
@@ -86,6 +86,7 @@ class MovieTheaterFrog(arcade.Window):
         self.off_screen_counter()
         self.progress_bar()
         self.on_draw()
+        self.hand_collisions()
 
     def spawn_popcorn(self):
         if self.level == 1 or self.level == 2:
@@ -186,6 +187,10 @@ class MovieTheaterFrog(arcade.Window):
     def hand2_reset(self):
         if self.hand2.center_y <= 0:
             self.hand2.center_y = WINDOW_HEIGHT
+    def hand_collisions(self):
+        for hand in self.handsprite_list:
+            if hand.collides_with_sprite(self.body):
+                print("true")
 
 
 
