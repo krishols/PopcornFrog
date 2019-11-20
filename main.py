@@ -4,6 +4,7 @@ from Frog import FrogBody
 from Popcorn import Popcorn
 from random import randint
 from Candy import CandyFall
+from Hand import HandBoss
 import arcade.key
 
 
@@ -14,7 +15,9 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE)
         self.frogsprite_list = None
         self.popsprite_list = None
+        self.handsprite_list = None
         self.body = None
+        self.hand1 = None
         self.timer = 1
         self.popcorn_counter = 0
         self.score = 0
@@ -34,10 +37,13 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.frogsprite_list = arcade.SpriteList()
         self.popsprite_list = arcade.SpriteList()
         self.candysprite_list = arcade.SpriteList()
+        self.handsprite_list = arcade.SpriteList()
         self.candysprite_list.append(CandyFall())
         self.frogsprite_list.append(FrogBody())
         self.popsprite_list.append(Popcorn())
+        self.handsprite_list.append(HandBoss())
         self.body = self.frogsprite_list[0]
+        self.hand1 = self.handsprite_list[0]
 
     def on_draw(self):
         """ Called when it is time to draw the world """
@@ -46,6 +52,8 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         arcade.draw_line(*self.body.tongue_args)
         self.popsprite_list.draw()
         self.candysprite_list.draw()
+        if self.level == 3 or self.level == 6:
+            self.handsprite_list.draw()
         arcade.draw_text(str(self.score), 0, 0, arcade.color.WHITE_SMOKE, 50)
         arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=self.progress_end, line_width=10, color= [50,205,50])
 
@@ -53,23 +61,30 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.frogsprite_list[0].update()
         self.popsprite_list.update()
         self.candysprite_list.update()
+        if self.level == 3 or self.level == 6:
+            self.handsprite_list[0].update()
+            self.hand_movement()
         self.spawn_popcorn()
         self.update_timer()
         self.spawn_candy()
         self.off_screen_counter()
         self.progress_bar()
+        self.on_draw()
+
 
     def spawn_popcorn(self):
-        if self.timer % 100 == 0:
-            self.popcorn_counter += 1
-            self.popsprite_list.append(Popcorn())
-            self.popsprite_list[self.popcorn_counter].center_x = randint(0,WINDOW_WIDTH)
+        if self.level == 1 or self.level == 2:
+            if self.timer % 100 == 0:
+                self.popcorn_counter += 1
+                self.popsprite_list.append(Popcorn())
+                self.popsprite_list[self.popcorn_counter].center_x = randint(0,WINDOW_WIDTH)
 
     def spawn_candy(self):
-        if self.timer % 300 == 0:
-            self.candy_counter += 1
-            self.candysprite_list.append(CandyFall())
-            self.candysprite_list[self.candy_counter].center_x = randint(0,WINDOW_WIDTH)
+        if self.level == 2:
+            if self.timer % 300 == 0:
+                self.candy_counter += 1
+                self.candysprite_list.append(CandyFall())
+                self.candysprite_list[self.candy_counter].center_x = randint(0,WINDOW_WIDTH)
 
     def update_timer(self):
         if self.timer < TIMER_MAX:
@@ -122,6 +137,22 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
                 self.progress_end = 450
             elif self.score == 10:
                 self.progress_end = 500
+                self.level = 3
+
+    def hand_movement(self):
+        if self.level == 3 or self.level == 6:
+            if self.hand1.center_y >= WINDOW_HEIGHT/2:
+                if self.hand1.center_x < self.body.center_x:
+                    self.hand1.move_right()
+                elif self.hand1.center_x > self.body.center_x:
+                    self.hand1.move_left()
+            if self.level == 6 and self.hand1.center_y < WINDOW_HEIGHT/2:
+                self.hand1.change_y = 5
+
+
+
+
+
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
