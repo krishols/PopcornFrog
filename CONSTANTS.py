@@ -14,3 +14,7 @@ MAX_LENGTH = 100
 TIMER_MAX = 300
 MUNCH_SOUND = arcade.load_sound("sounds/munch.wav")
 YUCK_SOUND = arcade.load_sound("sounds/yuck.mp3")
+BOSS_BATTLES = [3,6,9]
+FIRST_BATTLE = 3
+MIDDLE_BATTLE = 6
+FINAL_BATTLE = 9

@@ -18,6 +18,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.handsprite_list = None
         self.body = None
         self.hand1 = None
+        self.hand2 = None
         self.timer = 1
         self.popcorn_counter = 0
         self.score = 0
@@ -30,6 +31,7 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.off_counter = 0
         self.progress_end = 0
         self.level = 1
+        self.hand1_counter = 0
 
     def setup(self):
         """ Setup the game (or reset the game) """
@@ -42,8 +44,12 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.frogsprite_list.append(FrogBody())
         self.popsprite_list.append(Popcorn())
         self.handsprite_list.append(HandBoss())
+        self.handsprite_list.append(HandBoss())
         self.body = self.frogsprite_list[0]
         self.hand1 = self.handsprite_list[0]
+        self.hand2 = self.handsprite_list[1]
+        self.level = 9
+        self.hand1_counter = 0
 
     def on_draw(self):
         """ Called when it is time to draw the world """
@@ -52,8 +58,10 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         arcade.draw_line(*self.body.tongue_args)
         self.popsprite_list.draw()
         self.candysprite_list.draw()
-        if self.level == 3 or self.level == 6:
-            self.handsprite_list.draw()
+        if self.level in BOSS_BATTLES:
+            self.hand1.draw()
+            if self.level == FINAL_BATTLE:
+                self.hand2.draw()
         arcade.draw_text(str(self.score), 0, 0, arcade.color.WHITE_SMOKE, 50)
         arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=self.progress_end, line_width=10, color= [50,205,50])
 
@@ -61,16 +69,18 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
         self.frogsprite_list[0].update()
         self.popsprite_list.update()
         self.candysprite_list.update()
-        if self.level == 3 or self.level == 6:
+        if self.level in BOSS_BATTLES:
             self.handsprite_list[0].update()
             self.hand_movement()
+            if self.level == FINAL_BATTLE:
+                self.handsprite_list[1].update()
+                self.hand_movement()
         self.spawn_popcorn()
         self.update_timer()
         self.spawn_candy()
         self.off_screen_counter()
         self.progress_bar()
         self.on_draw()
-
 
     def spawn_popcorn(self):
         if self.level == 1 or self.level == 2:
@@ -99,7 +109,6 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
                 self.off_counter += 1
                 popcorn.remove_from_sprite_lists()
                 self.popcorn_counter -= 1
-
 
     def progress_bar(self):
         if self.level == 1:
@@ -140,14 +149,25 @@ class MovieTheaterFrog(arcade.Window, FrogBody):
                 self.level = 3
 
     def hand_movement(self):
-        if self.level == 3 or self.level == 6:
+        if self.level in BOSS_BATTLES:
             if self.hand1.center_y >= WINDOW_HEIGHT/2:
                 if self.hand1.center_x < self.body.center_x:
                     self.hand1.move_right()
                 elif self.hand1.center_x > self.body.center_x:
                     self.hand1.move_left()
-            if self.level == 6 and self.hand1.center_y < WINDOW_HEIGHT/2:
+            if self.level == MIDDLE_BATTLE and self.hand1.center_y < WINDOW_HEIGHT/2:
                 self.hand1.change_y = 5
+            if self.level == FINAL_BATTLE and self.hand1.center_y < WINDOW_HEIGHT/2:
+                self.hand1.change_y = 5
+            if self.level == FINAL_BATTLE:
+                if self.hand2.center_y >= WINDOW_HEIGHT*(3/4):
+                    if self.hand2.center_x < self.body.center_x:
+                        self.hand2.move_right()
+                    elif self.hand2.center_x > self.body.center_x:
+                        self.hand2.move_left()
+                else:
+                    self.hand2.change_y = 5
+
 
 
 
