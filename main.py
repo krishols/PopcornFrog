@@ -66,8 +66,8 @@ class MovieTheaterFrog(arcade.Window):
                 self.hand1.draw()
                 if self.level == FINAL_BATTLE:
                     self.hand2.draw()
-            arcade.draw_line(start_x=490, start_y=10, end_x=490, end_y=self.progress_end, line_width=10, color = arcade.color.YELLOW)
-            arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=10, line_width=10, color= [50,205,50])
+            arcade.draw_line(start_x=490, start_y=10, end_x=490, end_y=20, line_width=10, color = arcade.color.YELLOW)
+            arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=self.progress_end, line_width=10, color= [50,205,50])
         elif self.end_game:
             arcade.draw_text("Game over! You were caught!", start_x=60, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
 
