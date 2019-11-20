@@ -33,6 +33,7 @@ class MovieTheaterFrog(arcade.Window):
         self.level = 1
         self.hand1_counter = 0
         self.hand2_counter = 0
+        self.end_game = False
 
     def setup(self):
         """ Setup the game (or reset the game) """
@@ -49,22 +50,26 @@ class MovieTheaterFrog(arcade.Window):
         self.body = self.frogsprite_list[0]
         self.hand1 = self.handsprite_list[0]
         self.hand2 = self.handsprite_list[1]
-        self.level = 2
+        self.level = 9
         self.hand1_counter = 0
 
     def on_draw(self):
         """ Called when it is time to draw the world """
         arcade.start_render()
-        self.frogsprite_list.draw()
-        arcade.draw_line(*self.body.tongue_args)
-        self.popsprite_list.draw()
-        self.candysprite_list.draw()
-        if self.level in BOSS_BATTLES:
-            self.hand1.draw()
-            if self.level == FINAL_BATTLE:
-                self.hand2.draw()
-        arcade.draw_text(str(self.score), 0, 0, arcade.color.WHITE_SMOKE, 50)
-        arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=self.progress_end, line_width=10, color= [50,205,50])
+        if self.end_game == False:
+            self.frogsprite_list.draw()
+            arcade.draw_line(*self.body.tongue_args)
+            self.popsprite_list.draw()
+            self.candysprite_list.draw()
+            if self.level in BOSS_BATTLES:
+                self.hand1.draw()
+                if self.level == FINAL_BATTLE:
+                    self.hand2.draw()
+            arcade.draw_text(str(self.score), 0, 0, arcade.color.WHITE_SMOKE, 50)
+            arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=self.progress_end, line_width=10, color= [50,205,50])
+        elif self.end_game:
+            arcade.draw_text("Game over! You were caught!", start_x=60, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
+
 
 
 
@@ -190,7 +195,7 @@ class MovieTheaterFrog(arcade.Window):
     def hand_collisions(self):
         for hand in self.handsprite_list:
             if hand.collides_with_sprite(self.body):
-                print("true")
+                self.end_game = True
 
 
 
