@@ -29,7 +29,7 @@ class MovieTheaterFrog(arcade.Window):
         self.candysprite_list = None
         self.candy_counter = 0
         self.off_counter = 0
-        self.popcorn_missed_bar = 0
+        self.popcorn_missed_bar = 500
         self.progress_end = 0
         self.level = 1
         self.hand1_counter = 0
@@ -66,7 +66,7 @@ class MovieTheaterFrog(arcade.Window):
                 self.hand1.draw()
                 if self.level == FINAL_BATTLE:
                     self.hand2.draw()
-            arcade.draw_line(start_x=490, start_y=10, end_x=490, end_y=20, line_width=10, color = arcade.color.YELLOW)
+            arcade.draw_line(start_x=490, start_y=10, end_x=490, end_y= self.popcorn_missed_bar, line_width=10, color = arcade.color.YELLOW)
             arcade.draw_line(start_x=10,start_y=10,end_x=10,end_y=self.progress_end, line_width=10, color= [50,205,50])
         elif self.end_game:
             arcade.draw_text("Game over! You were caught!", start_x=60, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
@@ -116,13 +116,29 @@ class MovieTheaterFrog(arcade.Window):
         else:
             self.timer = 1
 
+    def off_screen_calculator(self):
+        self.off_counter += 1
+        self.popcorn_counter -= 1
+
+    def popcorn_missed_game_end(self):
+        if self.popcorn_missed_bar == 0:
+            self.end_game = True
+
     def off_screen_counter(self):
         copy_of_counter = self.popsprite_list[:]
         for popcorn in copy_of_counter:
             if popcorn.off_screen_test():
-                self.off_counter += 1
+                self.off_screen_calculator()
                 popcorn.remove_from_sprite_lists()
-                self.popcorn_counter -= 1
+                if self.level==1:
+                    self.popcorn_missed_bar -= (500*(1/5))
+                    self.popcorn_missed_game_end()
+                elif self.level==2:
+                    self.popcorn_missed_bar -= (500*(1/3))
+                    self.popcorn_missed_game_end()
+
+
+
 
     def hand_movement(self):
         if self.level in BOSS_BATTLES:
