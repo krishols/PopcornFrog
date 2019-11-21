@@ -7,7 +7,7 @@ class FrogBody(arcade.Sprite):
     def __init__(self):
         super().__init__()
         self.center_x = WINDOW_WIDTH/2
-        self.center_y= 100
+        self.center_y= 133
         self.texture = FROG
         self.change_x = 0
         self.tongue_end_x = self.center_x + 100

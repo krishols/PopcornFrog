@@ -8,6 +8,7 @@ POPCORN = arcade.load_texture("images/PopcornDraw.png", scale = .0625)
 FROG = arcade.load_texture("images/cutepixelfrog_16x16.gif", scale = 3)
 CANDY = arcade.load_texture("images/blob.png", scale = .1)
 HAND = arcade.load_texture("images/hand.png")
+TABLE = arcade.load_texture("images/table.png", scale=2)
 MOVEMENT_SPEED = 5
 FALL_SPEED = 1
 MAX_LENGTH = 100
