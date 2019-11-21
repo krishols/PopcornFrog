@@ -5,6 +5,7 @@ from Popcorn import Popcorn
 from random import randint
 from Candy import CandyFall
 from Hand import HandBoss
+from Table import Table
 import arcade.key
 
 
@@ -29,6 +30,7 @@ class MovieTheaterFrog(arcade.Window):
         self.candysprite_list = None
         self.candy_counter = 0
         self.off_counter = 0
+        self.tablesprite_list = None
         self.popcorn_missed_bar = 500
         self.progress_end = 0
         self.level = 1
@@ -43,14 +45,24 @@ class MovieTheaterFrog(arcade.Window):
         self.popsprite_list = arcade.SpriteList()
         self.candysprite_list = arcade.SpriteList()
         self.handsprite_list = arcade.SpriteList()
+        self.tablesprite_list = arcade.SpriteList()
         self.candysprite_list.append(CandyFall())
         self.frogsprite_list.append(FrogBody())
         self.popsprite_list.append(Popcorn())
         self.handsprite_list.append(HandBoss())
         self.handsprite_list.append(HandBoss())
+        self.tablesprite_list.append(Table())
+        self.tablesprite_list.append(Table())
+        self.tablesprite_list.append(Table())
         self.body = self.frogsprite_list[0]
         self.hand1 = self.handsprite_list[0]
         self.hand2 = self.handsprite_list[1]
+        self.floor1 = self.tablesprite_list[0]
+        self.floor1.center_x = 100
+        self.floor2 = self.tablesprite_list[1]
+        self.floor2.center_x = 250
+        self.floor3 = self.tablesprite_list[2]
+        self.floor3.center_x = 400
         self.level = 1
         self.hand1_counter = 0
 
@@ -58,6 +70,7 @@ class MovieTheaterFrog(arcade.Window):
         """ Called when it is time to draw the world """
         arcade.start_render()
         if self.end_game == False:
+            self.tablesprite_list.draw()
             self.frogsprite_list.draw()
             arcade.draw_line(*self.body.tongue_args)
             self.popsprite_list.draw()
