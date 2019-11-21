@@ -37,6 +37,8 @@ class MovieTheaterFrog(arcade.Window):
         self.hand1_counter = 0
         self.hand2_counter = 0
         self.end_game = False
+        self.PhysicsEngine = None
+        self.up_status = False
 
     def setup(self):
         """ Setup the game (or reset the game) """
@@ -65,6 +67,7 @@ class MovieTheaterFrog(arcade.Window):
         self.floor3.center_x = 400
         self.level = 1
         self.hand1_counter = 0
+        self.PhysicsEngine = arcade.PhysicsEnginePlatformer(self.body, self.tablesprite_list, GRAVITY)
 
     def on_draw(self):
         """ Called when it is time to draw the world """
@@ -74,7 +77,8 @@ class MovieTheaterFrog(arcade.Window):
             self.frogsprite_list.draw()
             arcade.draw_line(*self.body.tongue_args)
             self.popsprite_list.draw()
-            self.candysprite_list.draw()
+            if self.level == 2:
+                self.candysprite_list.draw()
             if self.level in BOSS_BATTLES:
                 self.hand1.draw()
                 if self.level == FINAL_BATTLE:
@@ -94,7 +98,8 @@ class MovieTheaterFrog(arcade.Window):
             self.popcorn_missed_bar = 500
         self.frogsprite_list[0].update()
         self.popsprite_list.update()
-        self.candysprite_list.update()
+        if self.level == 2:
+            self.candysprite_list.update()
         if self.level in BOSS_BATTLES:
             self.handsprite_list[0].update()
             self.hand_movement()
@@ -109,6 +114,8 @@ class MovieTheaterFrog(arcade.Window):
         self.off_screen_counter()
         self.on_draw()
         self.hand_collisions()
+        self.PhysicsEngine.update()
+        self.up_jump()
 
     def spawn_popcorn(self):
         if self.level == 1 or self.level == 2:
@@ -193,7 +200,9 @@ class MovieTheaterFrog(arcade.Window):
             if hand.collides_with_sprite(self.body):
                 self.end_game = True
 
-
+    def up_jump(self):
+        if self.up_status:
+            self.body.center_y += UP_SPEED
 
 
     def on_key_press(self, symbol: int, modifiers: int):
@@ -201,12 +210,19 @@ class MovieTheaterFrog(arcade.Window):
             self.frogsprite_list[0].change_x = MOVEMENT_SPEED
         elif symbol == arcade.key.A or symbol == arcade.key.LEFT:
             self.frogsprite_list[0].change_x = -MOVEMENT_SPEED
+        elif symbol == arcade.key.W or symbol == arcade.key.UP:
+            if self.PhysicsEngine.can_jump():
+                self.up_status = True
+                self.up_jump()
+
 
     def on_key_release(self, symbol: int, modifiers: int):
         if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
             self.body.change_x = 0
         elif symbol == arcade.key.A or symbol == arcade.key.LEFT:
             self.body.change_x = 0
+        elif symbol == arcade.key.W or symbol == arcade.key.UP:
+            self.up_status = False
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         self.body.tongue_end_x = x

@@ -1,7 +1,5 @@
 import arcade
 from CONSTANTS import *
-
-
 class FrogBody(arcade.Sprite):
 
     def __init__(self):
@@ -32,6 +30,7 @@ class FrogBody(arcade.Sprite):
         self.center_x += self.change_x
         if self.center_x <= 0 or self.center_x >= WINDOW_WIDTH:
             self.change_x = 0
+            self.change_y
         self.tongue()
 
     def tongue(self):
