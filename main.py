@@ -115,14 +115,14 @@ class MovieTheaterFrog(arcade.Window):
             if self.timer % 100 == 0:
                 self.popcorn_counter += 1
                 self.popsprite_list.append(Popcorn())
-                self.popsprite_list[self.popcorn_counter].center_x = randint(0,WINDOW_WIDTH)
+                self.popsprite_list[self.popcorn_counter].center_x = randint(50, 450)
 
     def spawn_candy(self):
         if self.level == 2:
             if self.timer % 300 == 0:
                 self.candy_counter += 1
                 self.candysprite_list.append(CandyFall())
-                self.candysprite_list[self.candy_counter].center_x = randint(0,WINDOW_WIDTH)
+                self.candysprite_list[self.candy_counter].center_x = randint(50,450)
 
     def update_timer(self):
         if self.timer < TIMER_MAX:
