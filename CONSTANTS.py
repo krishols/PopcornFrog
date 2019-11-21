@@ -4,6 +4,8 @@ WINDOW_HEIGHT = 500
 BACKGROUND_COLOR = arcade.color.BLACK
 GAME_TITLE = "Popcorn Frog"
 GAME_SPEED = 1/60
+GRAVITY = 5
+UP_SPEED = 5
 POPCORN = arcade.load_texture("images/PopcornDraw.png", scale = .0625)
 FROG = arcade.load_texture("images/cutepixelfrog_16x16.gif", scale = 3)
 CANDY = arcade.load_texture("images/blob.png", scale = .1)
