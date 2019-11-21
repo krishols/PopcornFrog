@@ -78,6 +78,7 @@ class MovieTheaterFrog(arcade.Window):
         if self.progress_end == 500:
             self.level += 1
             self.progress_end = 0
+            self.popcorn_missed_bar = 500
         self.frogsprite_list[0].update()
         self.popsprite_list.update()
         self.candysprite_list.update()
@@ -136,6 +137,7 @@ class MovieTheaterFrog(arcade.Window):
                 elif self.level==2:
                     self.popcorn_missed_bar -= (500*(1/3))
                     self.popcorn_missed_game_end()
+
 
 
 
