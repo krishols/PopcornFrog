@@ -157,13 +157,11 @@ class MovieTheaterFrog(arcade.Window):
     def hand2_reset(self):
         if self.hand2.center_y <= 0:
             self.hand2.center_y = WINDOW_HEIGHT
+
     def hand_collisions(self):
         for hand in self.handsprite_list:
             if hand.collides_with_sprite(self.body):
                 self.end_game = True
-
-
-
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
