@@ -11,6 +11,7 @@ FROG = arcade.load_texture("images/cutepixelfrog_16x16.gif", scale = 3)
 CANDY = arcade.load_texture("images/blob.png", scale = .1)
 HAND = arcade.load_texture("images/hand.png")
 TABLE = arcade.load_texture("images/table.png", scale=2)
+PLATFORM_TILE = arcade.load_texture("images/platform tile.png", scale = .3)
 MOVEMENT_SPEED = 5
 FALL_SPEED = 1
 MAX_LENGTH = 100
