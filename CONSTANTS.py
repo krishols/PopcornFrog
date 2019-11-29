@@ -22,3 +22,9 @@ BOSS_BATTLES = [3,6,9]
 FIRST_BATTLE = 3
 MIDDLE_BATTLE = 6
 FINAL_BATTLE = 9
+RISING_POP_LEVELS = [4,7,10]
+FALLING_POP_LEVELS = [1,2,4]
+CANDY_LEVELS = [2,4]
+RISE_SPEED = .5
+RISING_POPCORN = arcade.load_texture("images/risingpopcorn.tga", scale = 2)
+EAT_5 = [1,4]
