@@ -95,7 +95,7 @@ class MovieTheaterFrog(arcade.Window):
             if self.level in RISING_POP_LEVELS:
                 self.tilesprite_list.draw()
                 self.rising_popcorn.draw()
-            if self.level == 2:
+            if self.level in CANDY_LEVELS:
                 self.candysprite_list.draw()
             if self.level in BOSS_BATTLES:
                 self.hand1.draw()
@@ -115,7 +115,7 @@ class MovieTheaterFrog(arcade.Window):
             self.popcorn_missed_bar = 500
         self.frogsprite_list[0].update()
         self.popsprite_list.update()
-        if self.level == 2:
+        if self.level in CANDY_LEVELS:
             self.candysprite_list.update()
         if self.level in BOSS_BATTLES:
             self.handsprite_list[0].update()
@@ -138,17 +138,18 @@ class MovieTheaterFrog(arcade.Window):
 
     def spawn_platforms(self):
         if self.level in RISING_POP_LEVELS:
-            self.tilesprite_list.append(platform_tile())
-            self.tilesprite_list.append(platform_tile())
-            self.tilesprite_list.append(platform_tile())
-            self.tile1 = self.tilesprite_list[0]
-            self.tile1.center_x = 100
-            self.PhysicsEngine2 = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tilesprite_list,
-                                                                 gravity_constant=GRAVITY)
-            self.PhysicsEngine2.update()
-            self.rising_popcorn.append(RisingPopcorn())
+            if len(self.rising_popcorn) == 0:
+                self.tilesprite_list.append(platform_tile())
+                self.tilesprite_list.append(platform_tile())
+                self.tilesprite_list.append(platform_tile())
+                self.tile1 = self.tilesprite_list[0]
+                self.tile1.center_x = 100
+                self.PhysicsEngine2 = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tilesprite_list,
+                                                                     gravity_constant=GRAVITY)
+                self.rising_popcorn.append(RisingPopcorn())
             if self.rising_popcorn[0].center_y <= -100:
                 self.rising_popcorn[0].update()
+            self.PhysicsEngine2.update()
 
 
 
@@ -186,10 +187,10 @@ class MovieTheaterFrog(arcade.Window):
             if popcorn.off_screen_test():
                 self.off_screen_calculator()
                 popcorn.remove_from_sprite_lists()
-                if self.level == 1:
+                if self.level in EAT_5:
                     self.popcorn_missed_bar -= (500 * (1 / 5))
                     self.popcorn_missed_game_end()
-                elif self.level == 2:
+                elif self.level in EAT_10:
                     self.popcorn_missed_bar -= (500 * (1 / 3))
                     self.popcorn_missed_game_end()
 
@@ -278,9 +279,9 @@ class MovieTheaterFrog(arcade.Window):
                 arcade.play_sound(YUCK_SOUND)
                 self.candy_counter -= 1
                 self.score -= 1
-                if self.level == 1:
+                if self.level in EAT_5:
                     self.progress_end -= 100
-                elif self.level == 2:
+                elif self.level in EAT_10:
                     self.progress_end -= 50
 
 

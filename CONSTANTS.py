@@ -28,3 +28,4 @@ CANDY_LEVELS = [2,4]
 RISE_SPEED = .5
 RISING_POPCORN = arcade.load_texture("images/risingpopcorn.tga", scale = 2)
 EAT_5 = [1,4]
+EAT_10 = [2,5]
