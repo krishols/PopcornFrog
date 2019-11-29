@@ -76,7 +76,7 @@ class MovieTheaterFrog(arcade.Window):
         self.floor2.center_x = 250
         self.floor3 = self.tablesprite_list[2]
         self.floor3.center_x = 400
-        self.level = 4
+        self.level = 8
         self.hand1_counter = 0
         self.PhysicsEngine = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tablesprite_list, gravity_constant=GRAVITY)
 
@@ -148,6 +148,8 @@ class MovieTheaterFrog(arcade.Window):
                                                                      gravity_constant=GRAVITY)
                 self.rising_popcorn.append(RisingPopcorn())
             if self.rising_popcorn[0].center_y <= -100:
+                if self.level in FASTER_RISE:
+                    self.rising_popcorn[0].change_y = 1.5
                 self.rising_popcorn[0].update()
             self.PhysicsEngine2.update()
 
@@ -159,13 +161,24 @@ class MovieTheaterFrog(arcade.Window):
                 self.popcorn_counter += 1
                 self.popsprite_list.append(Popcorn())
                 self.popsprite_list[self.popcorn_counter].center_x = randint(50, 450)
+                if self.level in FASTER_FALL:
+                    self.popsprite_list[self.popcorn_counter].change_y = 3
 
     def spawn_candy(self):
-        if self.level in CANDY_LEVELS:
+        if self.level in CANDY_LEVELS and self.level not in MORE_CANDY:
             if self.timer % 300 == 0:
                 self.candy_counter += 1
                 self.candysprite_list.append(CandyFall())
                 self.candysprite_list[self.candy_counter].center_x = randint(50, 450)
+                if self.level in FASTER_FALL:
+                    self.candysprite_list[self.candy_counter].change_y = 3
+        elif self.level in CANDY_LEVELS and self.level in MORE_CANDY:
+            if self.timer % 150 == 0:
+                self.candy_counter += 1
+                self.candysprite_list.append(CandyFall())
+                self.candysprite_list[self.candy_counter].center_x = randint(50, 450)
+                if self.level in FASTER_FALL:
+                    self.candysprite_list[self.candy_counter].change_y = 3
 
     def update_timer(self):
         if self.timer < TIMER_MAX:
@@ -271,7 +284,7 @@ class MovieTheaterFrog(arcade.Window):
                 self.score += 1
                 if self.level in EAT_5:
                     self.progress_end += 100
-                elif self.level == 2:
+                elif self.level in EAT_10:
                     self.progress_end += 50
         for candy in copy_of_candy:
             if candy.collides_with_point([x, y]):
