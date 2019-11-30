@@ -1,5 +1,6 @@
 from CONSTANTS import *
 class Table(arcade.Sprite):
+    """Creates floor"""
 
     def __init__(self):
         super().__init__()

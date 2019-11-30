@@ -1,6 +1,7 @@
 import arcade
 from CONSTANTS import *
 class FrogBody(arcade.Sprite):
+    """Creates the frog body and tongue"""
 
     def __init__(self):
         super().__init__()

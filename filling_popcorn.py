@@ -2,6 +2,7 @@ import arcade
 from CONSTANTS import *
 
 class RisingPopcorn(arcade.Sprite):
+    """Creates the rising popcorn sprite"""
     def __init__(self):
         super().__init__()
         self.center_x = WINDOW_WIDTH/2

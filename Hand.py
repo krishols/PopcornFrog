@@ -2,6 +2,7 @@ from CONSTANTS import *
 import arcade
 
 class HandBoss(arcade.Sprite):
+    """Creates hand bosses"""
 
     def __init__(self):
         super().__init__()

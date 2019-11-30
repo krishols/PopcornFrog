@@ -76,7 +76,7 @@ class MovieTheaterFrog(arcade.Window):
         self.floor2.center_x = 250
         self.floor3 = self.tablesprite_list[2]
         self.floor3.center_x = 400
-        self.level = 8
+        self.level = 4
         self.hand1_counter = 0
         self.PhysicsEngine = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tablesprite_list, gravity_constant=GRAVITY)
 
@@ -86,6 +86,7 @@ class MovieTheaterFrog(arcade.Window):
         """ Called when it is time to draw the world """
         arcade.start_render()
         if not self.end_game:
+            self.draw_instructions()
             self.floor1.draw()
             self.floor2.draw()
             self.floor3.draw()
@@ -137,6 +138,7 @@ class MovieTheaterFrog(arcade.Window):
 
 
     def spawn_platforms(self):
+        "Creates platforms for frogs to jump on"
         if self.level in RISING_POP_LEVELS:
             if len(self.rising_popcorn) == 0:
                 self.tilesprite_list.append(platform_tile())
@@ -156,6 +158,7 @@ class MovieTheaterFrog(arcade.Window):
 
 
     def spawn_popcorn(self):
+        """Creates randomly generated popcorn to fall on the screen"""
         if self.level in FALLING_POP_LEVELS:
             if self.timer % 100 == 0:
                 self.popcorn_counter += 1
@@ -164,7 +167,28 @@ class MovieTheaterFrog(arcade.Window):
                 if self.level in FASTER_FALL:
                     self.popsprite_list[self.popcorn_counter].change_y = 3
 
+    def draw_instructions(self):
+        """Draws instructions for the game"""
+        if self.level == 1:
+            arcade.draw_text("Eat Popcorn to Fill the Frog's Hunger Bar!", start_x=125, start_y=325,
+                             color=arcade.color.WHITE_SMOKE, font_size=12,
+                             width=0, align="center")
+        elif self.level == 2:
+            arcade.draw_text("Don't eat the candy, You'll lose points!", start_x=125, start_y=325,
+                             color=arcade.color.WHITE_SMOKE, font_size=12,
+                             width=0, align="center")
+        elif self.level == 3:
+            arcade.draw_text("Dodge the hand!", start_x=200, start_y=325,
+                             color=arcade.color.WHITE_SMOKE, font_size=12,
+                             width=0, align="center")
+        elif self.level == 4:
+            arcade.draw_text("Jump away from the rising popcorn!", start_x=125, start_y=325,
+                             color=arcade.color.WHITE_SMOKE, font_size=12,
+                             width=0, align="center")
+
+
     def spawn_candy(self):
+        """Spawns popcorn to randomly fall from the top of the screen"""
         if self.level in CANDY_LEVELS and self.level not in MORE_CANDY:
             if self.timer % 300 == 0:
                 self.candy_counter += 1
@@ -181,20 +205,24 @@ class MovieTheaterFrog(arcade.Window):
                     self.candysprite_list[self.candy_counter].change_y = 3
 
     def update_timer(self):
+        """Updates timer and resets when timer hits max"""
         if self.timer < TIMER_MAX:
             self.timer += 1
         else:
             self.timer = 1
 
     def off_screen_calculator(self):
+        """Counts the amount of popcorn that fall off screen"""
         self.off_counter += 1
         self.popcorn_counter -= 1
 
     def popcorn_missed_game_end(self):
+        """Ends game if enough popcorn falls off screen"""
         if self.popcorn_missed_bar == 0:
             self.end_game = True
 
     def off_screen_counter(self):
+        """Tracks the amount of popcorn the falls off screen"""
         copy_of_counter = self.popsprite_list[:]
         for popcorn in copy_of_counter:
             if popcorn.off_screen_test():
@@ -208,6 +236,7 @@ class MovieTheaterFrog(arcade.Window):
                     self.popcorn_missed_game_end()
 
     def hand_movement(self):
+        """Moves hand depending on player location"""
         if self.level in BOSS_BATTLES:
             if self.hand1.center_y >= WINDOW_HEIGHT / 2:
                 if self.hand1.center_x < self.body.center_x:
@@ -228,6 +257,7 @@ class MovieTheaterFrog(arcade.Window):
                     self.hand2.change_y = 5
 
     def hand1_reset(self):
+        """Resets hand 1 when it reaches the bottom of the screen and tracks amount of times"""
         if self.hand1.center_y <= 0:
             if self.hand1_counter == 2:
                 self.level += 1
@@ -238,22 +268,26 @@ class MovieTheaterFrog(arcade.Window):
                 self.hand1.change_y = 1
 
     def hand2_reset(self):
+        """Resets hand 2 when it reaches the bottom of the screen"""
         if self.hand2.center_y <= 0:
             self.hand2.center_y = WINDOW_HEIGHT
 
     def hand_collisions(self):
+        """Checks for collision between frog and hands"""
         if self.level in BOSS_BATTLES:
             for hand in self.handsprite_list:
                 if hand.collides_with_sprite(self.body):
                     self.end_game = True
 
     def rising_pop_collisions(self):
+        """Checks for collisions between rising popcorn and frog"""
         if self.level in RISING_POP_LEVELS:
             for popcorn in self.rising_popcorn:
                 if popcorn.collides_with_sprite(self.body):
                     self.end_game = True
 
     def on_key_press(self, symbol: int, modifiers: int):
+        """Moves frog left and right and jumps"""
         if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
             self.frogsprite_list[0].change_x = MOVEMENT_SPEED
         elif symbol == arcade.key.A or symbol == arcade.key.LEFT:
@@ -264,6 +298,7 @@ class MovieTheaterFrog(arcade.Window):
 
 
     def on_key_release(self, symbol: int, modifiers: int):
+        """Stops frog from movements"""
         if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
             self.body.change_x = 0
         elif symbol == arcade.key.A or symbol == arcade.key.LEFT:
@@ -272,6 +307,7 @@ class MovieTheaterFrog(arcade.Window):
             self.body.change_y = 0
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
+        """"Tracks mouse movement and controls frog tongue"""
         self.body.tongue_end_x = x
         self.body.tongue_end_y = y
         copy_of_popcorn = self.popsprite_list[:]

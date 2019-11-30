@@ -3,6 +3,7 @@ from CONSTANTS import *
 from random import randint
 
 class Popcorn(arcade.Sprite):
+    """Creates the falling popcorn sprites"""
     def __init__(self):
         super().__init__()
         self.center_y = WINDOW_HEIGHT
