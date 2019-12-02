@@ -44,6 +44,8 @@ class MovieTheaterFrog(arcade.Window):
         self.hand1_counter = 0
         self.hand2_counter = 0
         self.end_game = False
+        self.lost_game = False
+        self.won_game = False
         self.PhysicsEngine = None
         self.PhysicsEngine2 = None
         self.up_status = False
@@ -76,7 +78,7 @@ class MovieTheaterFrog(arcade.Window):
         self.floor2.center_x = 250
         self.floor3 = self.tablesprite_list[2]
         self.floor3.center_x = 400
-        self.level = 1
+        self.level = 10
         self.hand1_counter = 0
         self.PhysicsEngine = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tablesprite_list, gravity_constant=GRAVITY)
 
@@ -107,8 +109,10 @@ class MovieTheaterFrog(arcade.Window):
             arcade.draw_line(start_x=10, start_y=10, end_x=10, end_y=self.progress_end, line_width=10,
                              color=[50, 205, 50])
         elif self.end_game:
-            arcade.draw_text("Game over!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
-
+            if self.lost_game:
+                arcade.draw_text("Game over!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
+            elif self.won_game:
+                arcade.draw_text("You won!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
     def on_update(self, delta_time):
         if self.progress_end == 500:
             self.level += 1
@@ -145,17 +149,32 @@ class MovieTheaterFrog(arcade.Window):
                 self.tilesprite_list.append(platform_tile())
                 self.tile1 = self.tilesprite_list[0]
                 self.tile1.center_x = 100
-                self.tile1.center_y=200
+                self.tile1.center_y = 200
                 self.tile2 = self.tilesprite_list[1]
-                self.tile2.center_x=400
+                self.tile2.center_x = 400
+                self.tile2.center_y = 200
                 self.PhysicsEngine2 = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tilesprite_list,
                                                                      gravity_constant=GRAVITY)
                 self.rising_popcorn.append(RisingPopcorn())
-            if self.rising_popcorn[0].center_y <= 0:
-                if self.level in FASTER_RISE:
+            if self.level == 7:
+                if self.rising_popcorn[0].center_y <= 0:
                     self.rising_popcorn[0].change_y = 1.5
-                self.rising_popcorn[0].update()
+                    self.rising_popcorn[0].update()
+                    self.PhysicsEngine2.update()
+        if self.level == 10:
+            self.tilesprite_list.append(platform_tile())
+            self.tile3 = self.tilesprite_list[2]
+            self.tile3.center_x = 250
+            self.tile3.center_y = 350
             self.PhysicsEngine2.update()
+            if self.rising_popcorn[0].center_y <= 250:
+                self.rising_popcorn[0].change_y = 1.5
+                self.rising_popcorn[0].update()
+                self.PhysicsEngine2.update()
+            if self.body.center_y > 500:
+                self.end_game = True
+                self.won_game = True
+
 
 
 
@@ -222,6 +241,7 @@ class MovieTheaterFrog(arcade.Window):
         """Ends game if enough popcorn falls off screen"""
         if self.popcorn_missed_bar == 0:
             self.end_game = True
+            self.lost_game = True
 
     def off_screen_counter(self):
         """Tracks the amount of popcorn the falls off screen"""
@@ -280,6 +300,7 @@ class MovieTheaterFrog(arcade.Window):
             for hand in self.handsprite_list:
                 if hand.collides_with_sprite(self.body):
                     self.end_game = True
+                    self.lost_game = True
 
     def rising_pop_collisions(self):
         """Checks for collisions between rising popcorn and frog"""
@@ -287,6 +308,7 @@ class MovieTheaterFrog(arcade.Window):
             for popcorn in self.rising_popcorn:
                 if popcorn.collides_with_sprite(self.body):
                     self.end_game = True
+                    self.lost_game = True
 
     def on_key_press(self, symbol: int, modifiers: int):
         """Moves frog left and right and jumps"""
