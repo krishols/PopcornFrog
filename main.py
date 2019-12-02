@@ -78,7 +78,7 @@ class MovieTheaterFrog(arcade.Window):
         self.floor2.center_x = 250
         self.floor3 = self.tablesprite_list[2]
         self.floor3.center_x = 400
-        self.level = 10
+        self.level = 5
         self.hand1_counter = 0
         self.PhysicsEngine = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tablesprite_list, gravity_constant=GRAVITY)
 
@@ -191,23 +191,44 @@ class MovieTheaterFrog(arcade.Window):
     def draw_instructions(self):
         """Draws instructions for the game"""
         if self.level == 1:
-            arcade.draw_text("Eat Popcorn to Fill the Frog's Hunger Bar!", start_x=125, start_y=325,
-                             color=arcade.color.WHITE_SMOKE, font_size=12,
-                             width=0, align="center")
+            arcade.draw_text("You are a frog trapped in a movie theatre \n popcorn machine. Eat popcorn to fill the frog's \n hunger bar! \n If you miss a popcorn your health bar goes down.", start_x=75, start_y=325, color=arcade.color.WHITE_SMOKE, font_size=12, width=0, align="center")
         elif self.level == 2:
-            arcade.draw_text("Don't eat the candy, You'll lose points!", start_x=125, start_y=325,
+            arcade.draw_text("Don't eat the candy, you'll lose hunger points!", start_x=125, start_y=325,
                              color=arcade.color.WHITE_SMOKE, font_size=12,
                              width=0, align="center")
         elif self.level == 3:
-            arcade.draw_text("Dodge the hand!", start_x=200, start_y=325,
+            arcade.draw_text("The movie theatre attendant is trying to catch you! \n Dodge their hand!", start_x=125, start_y=325,
                              color=arcade.color.WHITE_SMOKE, font_size=12,
                              width=0, align="center")
         elif self.level == 4:
-            arcade.draw_text("Jump away from the rising popcorn!", start_x=125, start_y=325,
+            arcade.draw_text("They're filling up the machine! \n Jump away from the rising popcorn!\n Don't forget to keep eating falling popcorn.", start_x=125, start_y=325,
                              color=arcade.color.WHITE_SMOKE, font_size=12,
                              width=0, align="center")
-
-
+        elif self.level == 5:
+            arcade.draw_text("They're speeding up the machine...\n Keep eating!", start_x=125,
+                             start_y=325,
+                             color=arcade.color.WHITE_SMOKE, font_size=12,
+                             width=0, align="center")
+        elif self.level == 6:
+            arcade.draw_text("They're trying to catch you again!", start_x=125,
+                             start_y=325,
+                             color=arcade.color.WHITE_SMOKE, font_size=12,
+                             width=0, align="center")
+        elif self.level == 7 or self.level == 8:
+            arcade.draw_text("Keep eating!", start_x=125,
+                             start_y=325,
+                             color=arcade.color.WHITE_SMOKE, font_size=12,
+                             width=0, align="center")
+        elif self.level == 9:
+            arcade.draw_text("They won't give up... \n They're still trying to catch you!", start_x=125,
+                             start_y=325,
+                             color=arcade.color.WHITE_SMOKE, font_size=12,
+                             width=0, align="center")
+        elif self.level == 10:
+            arcade.draw_text("They're filling up the machine all the way! Jump out of the machine to freedom!", start_x=125,
+                             start_y=325,
+                             color=arcade.color.WHITE_SMOKE, font_size=12,
+                             width=0, align="center")
     def spawn_candy(self):
         """Spawns popcorn to randomly fall from the top of the screen"""
         if self.level in CANDY_LEVELS and self.level not in MORE_CANDY:
