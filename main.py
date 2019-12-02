@@ -78,7 +78,7 @@ class MovieTheaterFrog(arcade.Window):
         self.floor2.center_x = 250
         self.floor3 = self.tablesprite_list[2]
         self.floor3.center_x = 400
-        self.level = 5
+        self.level = 10
         self.hand1_counter = 0
         self.PhysicsEngine = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tablesprite_list, gravity_constant=GRAVITY)
 
@@ -88,31 +88,13 @@ class MovieTheaterFrog(arcade.Window):
         """ Called when it is time to draw the world """
         arcade.start_render()
         if not self.end_game:
-            self.draw_instructions()
-            self.floor1.draw()
-            self.floor2.draw()
-            self.floor3.draw()
-            self.frogsprite_list.draw()
-            arcade.draw_line(*self.body.tongue_args)
-            self.popsprite_list.draw()
-            if self.level in RISING_POP_LEVELS:
-                self.tilesprite_list.draw()
-                self.rising_popcorn.draw()
-            if self.level in CANDY_LEVELS:
-                self.candysprite_list.draw()
-            if self.level in BOSS_BATTLES:
-                self.hand1.draw()
-                if self.level == FINAL_BATTLE:
-                    self.hand2.draw()
-            arcade.draw_line(start_x=490, start_y=10, end_x=490, end_y=self.popcorn_missed_bar, line_width=10,
-                             color=arcade.color.YELLOW)
-            arcade.draw_line(start_x=10, start_y=10, end_x=10, end_y=self.progress_end, line_width=10,
-                             color=[50, 205, 50])
+            self.draw_game()
         elif self.end_game:
-            if self.lost_game:
-                arcade.draw_text("Game over!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
+            self.draw_lose_game()
             elif self.won_game:
                 arcade.draw_text("You won!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
+
+
     def on_update(self, delta_time):
         if self.progress_end == 500:
             self.level += 1
@@ -139,6 +121,42 @@ class MovieTheaterFrog(arcade.Window):
         self.PhysicsEngine.update()
         self.spawn_platforms()
         self.rising_pop_collisions()
+
+    def draw_game(self):
+        self.draw_instructions()
+        self.floor1.draw()
+        self.floor2.draw()
+        self.floor3.draw()
+        self.frogsprite_list.draw()
+        arcade.draw_line(*self.body.tongue_args)
+        self.popsprite_list.draw()
+        self.draw_rising_levels()
+        self.draw_candy_levels()
+        self.draw_boss_levels()
+
+
+    def draw_rising_levels(self):
+        if self.level in RISING_POP_LEVELS:
+            self.tilesprite_list.draw()
+            self.rising_popcorn.draw()
+
+    def draw_candy_levels(self):
+        if self.level in CANDY_LEVELS:
+            self.candysprite_list.draw()
+
+    def draw_boss_levels(self):
+        if self.level in BOSS_BATTLES:
+            self.hand1.draw()
+            if self.level == FINAL_BATTLE:
+                self.hand2.draw()
+        arcade.draw_line(start_x=490, start_y=10, end_x=490, end_y=self.popcorn_missed_bar, line_width=10,
+                         color=arcade.color.YELLOW)
+        arcade.draw_line(start_x=10, start_y=10, end_x=10, end_y=self.progress_end, line_width=10,
+                         color=[50, 205, 50])
+
+    def draw_lose_game(self):
+        if self.lost_game:
+            arcade.draw_text("Game over!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
 
 
     def spawn_platforms(self):
@@ -225,8 +243,8 @@ class MovieTheaterFrog(arcade.Window):
                              color=arcade.color.WHITE_SMOKE, font_size=12,
                              width=0, align="center")
         elif self.level == 10:
-            arcade.draw_text("They're filling up the machine all the way! Jump out of the machine to freedom!", start_x=125,
-                             start_y=325,
+            arcade.draw_text("They're filling up the machine all the way! \n Jump out of the machine to freedom!", start_x=125,
+                             start_y=250,
                              color=arcade.color.WHITE_SMOKE, font_size=12,
                              width=0, align="center")
     def spawn_candy(self):
