@@ -7,11 +7,11 @@ GAME_SPEED = 1/60
 GRAVITY = .5
 UP_SPEED = 5
 POPCORN = arcade.load_texture("images/PopcornDraw.png", scale = .0625)
-FROG = arcade.load_texture("images/frog sprite.png", scale = .2)
+FROG = arcade.load_texture("images/frog sprite.png", scale = .15)
 CANDY = arcade.load_texture("images/candy_sprite.png", scale = .15)
 HAND = arcade.load_texture("images/hand.png")
 TABLE = arcade.load_texture("images/counter_sprite.png", scale=.44)
-PLATFORM_TILE = arcade.load_texture("images/platform tile.png", scale = .3)
+PLATFORM_TILE = arcade.load_texture("images/tile_sprite.png", scale = .3)
 MOVEMENT_SPEED = 5
 FALL_SPEED = 1
 MAX_LENGTH = 100
@@ -26,7 +26,7 @@ RISING_POP_LEVELS = [4,7,10]
 FALLING_POP_LEVELS = [1,2,4,5,7,8]
 CANDY_LEVELS = [2,4,5,7,8]
 RISE_SPEED = .5
-RISING_POPCORN = arcade.load_texture("images/risingpopcorn.tga", scale = 2)
+RISING_POPCORN = arcade.load_texture("images/popcorn_fillup.png", scale = .5)
 EAT_5 = [1,4,7]
 EAT_10 = [2,5,8]
 FASTER_FALL = [5,7,8]

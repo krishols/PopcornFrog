@@ -76,7 +76,7 @@ class MovieTheaterFrog(arcade.Window):
         self.floor2.center_x = 250
         self.floor3 = self.tablesprite_list[2]
         self.floor3.center_x = 400
-        self.level = 4
+        self.level = 1
         self.hand1_counter = 0
         self.PhysicsEngine = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tablesprite_list, gravity_constant=GRAVITY)
 
@@ -107,7 +107,7 @@ class MovieTheaterFrog(arcade.Window):
             arcade.draw_line(start_x=10, start_y=10, end_x=10, end_y=self.progress_end, line_width=10,
                              color=[50, 205, 50])
         elif self.end_game:
-            arcade.draw_text("Game over!", start_x=60, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
+            arcade.draw_text("Game over!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
 
     def on_update(self, delta_time):
         if self.progress_end == 500:
@@ -143,13 +143,15 @@ class MovieTheaterFrog(arcade.Window):
             if len(self.rising_popcorn) == 0:
                 self.tilesprite_list.append(platform_tile())
                 self.tilesprite_list.append(platform_tile())
-                self.tilesprite_list.append(platform_tile())
                 self.tile1 = self.tilesprite_list[0]
                 self.tile1.center_x = 100
+                self.tile1.center_y=200
+                self.tile2 = self.tilesprite_list[1]
+                self.tile2.center_x=400
                 self.PhysicsEngine2 = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tilesprite_list,
                                                                      gravity_constant=GRAVITY)
                 self.rising_popcorn.append(RisingPopcorn())
-            if self.rising_popcorn[0].center_y <= -100:
+            if self.rising_popcorn[0].center_y <= 0:
                 if self.level in FASTER_RISE:
                     self.rising_popcorn[0].change_y = 1.5
                 self.rising_popcorn[0].update()
