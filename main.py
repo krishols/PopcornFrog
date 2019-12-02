@@ -91,8 +91,8 @@ class MovieTheaterFrog(arcade.Window):
             self.draw_game()
         elif self.end_game:
             self.draw_lose_game()
-            elif self.won_game:
-                arcade.draw_text("You won!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
+        if self.won_game:
+            arcade.draw_text("You won!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
 
 
     def on_update(self, delta_time):
