@@ -97,21 +97,15 @@ class MovieTheaterFrog(arcade.Window):
 
     def on_update(self, delta_time):
         if self.progress_end == 500:
-            self.level += 1
-            self.progress_end = 0
-            self.popcorn_missed_bar = 500
+            self.progress_level()
         self.frogsprite_list[0].update()
         self.popsprite_list.update()
         if self.level in CANDY_LEVELS:
             self.candysprite_list.update()
         if self.level in BOSS_BATTLES:
-            self.handsprite_list[0].update()
-            self.hand_movement()
-            self.hand1_reset()
+            self.hand_boss()
             if self.level == FINAL_BATTLE:
-                self.handsprite_list[1].update()
-                self.hand_movement()
-                self.hand2_reset()
+                self.hand_final()
         self.spawn_popcorn()
         self.update_timer()
         self.spawn_candy()
@@ -121,6 +115,21 @@ class MovieTheaterFrog(arcade.Window):
         self.PhysicsEngine.update()
         self.spawn_platforms()
         self.rising_pop_collisions()
+
+    def progress_level(self):
+        self.level += 1
+        self.progress_end = 0
+        self.popcorn_missed_bar = 500
+
+    def hand_boss(self):
+        self.handsprite_list[0].update()
+        self.hand_movement()
+        self.hand1_reset()
+
+    def hand_final(self):
+        self.handsprite_list[1].update()
+        self.hand_movement()
+        self.hand2_reset()
 
     def draw_game(self):
         self.draw_instructions()
