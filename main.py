@@ -76,7 +76,7 @@ class MovieTheaterFrog(arcade.Window):
         self.floor2.center_x = 250
         self.floor3 = self.tablesprite_list[2]
         self.floor3.center_x = 400
-        self.level = 4
+        self.level = 1
         self.hand1_counter = 0
         self.PhysicsEngine = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tablesprite_list, gravity_constant=GRAVITY)
 
