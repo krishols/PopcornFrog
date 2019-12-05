@@ -1,7 +1,7 @@
 from CONSTANTS import *
 
 
-class platform_tile(arcade.Sprite):
+class PlatformTile(arcade.Sprite):
     """Creates platforms for frog to jump on"""
     def __init__(self):
         super().__init__()
