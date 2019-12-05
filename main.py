@@ -117,6 +117,7 @@ class MovieTheaterFrog(arcade.Window):
         self.PhysicsEngine.update()
         self.spawn_platforms()
         self.rising_pop_collisions()
+        self.check_candy_pop_collision()
 
     def progress_level(self):
         self.level += 1
@@ -210,6 +211,11 @@ class MovieTheaterFrog(arcade.Window):
             if self.body.center_y > 500:
                 self.end_game = True
                 self.won_game = True
+
+    def check_candy_pop_collision(self):
+        for popcorn in self.popsprite_list:
+            if popcorn.collides_with_list(self.candysprite_list):
+                popcorn.center_y += 50
 
     def spawn_popcorn(self):
         # Creates randomly generated popcorn to fall on the screen
