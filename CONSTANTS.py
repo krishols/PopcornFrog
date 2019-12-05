@@ -32,3 +32,7 @@ EAT_10 = [2,5,8]
 FASTER_FALL = [5,7,8]
 FASTER_RISE = [7,10]
 MORE_CANDY = [8]
+INSTRUCTION_SCREEN = arcade.load_texture("images/start_screen.png")
+INSTRUCTION_PAGE = 1
+GAME_RUNNING = 2
+END_GAME = 3

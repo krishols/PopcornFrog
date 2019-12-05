@@ -51,7 +51,11 @@ class MovieTheaterFrog(arcade.Window):
         self.PhysicsEngine = None
         self.PhysicsEngine2 = None
         self.up_status = False
-        self.allow_jumjp = False
+        self.allow_jump = False
+        self.instructions = []
+        self.instructions.append(INSTRUCTION_SCREEN)
+
+        self.current_state = INSTRUCTION_PAGE
 
     def setup(self):
         # Setup the game (or reset the game)
@@ -81,17 +85,36 @@ class MovieTheaterFrog(arcade.Window):
         self.floor2.center_x = 250
         self.floor3 = self.tablesprite_list[2]
         self.floor3.center_x = 400
-        self.level = 4
+        self.level = 10
         self.hand1_counter = 0
         self.PhysicsEngine = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tablesprite_list,
                                                             gravity_constant=GRAVITY)
         self.allow_jump = True
 
+    def draw_instructions_page(self, page_number):
+        # Draw an instruction page. Load the page as an image.
+        page_texture = self.instructions[page_number]
+        arcade.draw_texture_rectangle(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2,
+                                          page_texture.width,
+                                          page_texture.height, page_texture, 0)
+
     def on_draw(self):
+        # Render the screen
+
+            arcade.start_render()
+
+            if self.current_state == INSTRUCTION_PAGE:
+                self.draw_instructions_page(0)
+
+            elif self.current_state == GAME_RUNNING:
+                self.draw_game()
+
+
+    def draw_game(self):
         # Called when it is time to draw the world
         arcade.start_render()
         if not self.end_game:
-            self.draw_game()
+            self.draw_game_elements()
         elif self.end_game:
             self.draw_lose_game()
         if self.won_game:
@@ -120,6 +143,7 @@ class MovieTheaterFrog(arcade.Window):
         self.rising_pop_collisions()
         self.check_candy_pop_collision()
 
+
     def progress_level(self):
         # progresses  to next level when current level is completed
         self.level += 1
@@ -138,7 +162,8 @@ class MovieTheaterFrog(arcade.Window):
         self.hand_movement()
         self.hand2_reset()
 
-    def draw_game(self):
+
+    def draw_game_elements(self):
         # draw basic game elements
         self.draw_instructions()
         self.floor1.draw()
@@ -176,14 +201,14 @@ class MovieTheaterFrog(arcade.Window):
     def draw_lose_game(self):
         # draw lose game screen
         if self.lost_game:
-            arcade.draw_text("Game over!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
+            arcade.draw_text("Game over! \n Click the mouse \n to try again.", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25, align="center")
 
     def control_rising_popcorn(self):
         # Creates platforms for frogs to jump on
         if self.level in RISING_POP_LEVELS:
             self.spawn_tiles()
         elif self.level not in RISING_POP_LEVELS:
-                self.PhysicsEngine2 = None
+            self.PhysicsEngine2 = None
         if self.level == 4:
             self.level_4_pop()
         if self.level == 7:
@@ -253,11 +278,15 @@ class MovieTheaterFrog(arcade.Window):
         # Creates randomly generated popcorn to fall on the screen
         if self.level in FALLING_POP_LEVELS:
             if self.timer % 100 == 0:
-                self.popcorn_counter += 1
-                self.popsprite_list.append(Popcorn())
-                self.popsprite_list[self.popcorn_counter].center_x = randint(50, 450)
-                if self.level in FASTER_FALL:
-                    self.popsprite_list[self.popcorn_counter].change_y = 3
+                self.edit_pop_list()
+
+    def edit_pop_list(self):
+        # adds popcorn sprites to list to be spawned
+        self.popcorn_counter += 1
+        self.popsprite_list.append(Popcorn())
+        self.popsprite_list[self.popcorn_counter].center_x = randint(50, 450)
+        if self.level in FASTER_FALL:
+            self.popsprite_list[self.popcorn_counter].change_y = 3
 
     def draw_instructions(self):
         # Draws instructions for the game
@@ -324,7 +353,7 @@ class MovieTheaterFrog(arcade.Window):
                 self.candysprite_list[self.candy_counter].change_y = 3
 
     def more_candy(self):
-        #spawns candy for levels requiring more candy
+        # spawns candy for levels requiring more candy
         if self.timer % 150 == 0:
             self.candy_counter += 1
             self.candysprite_list.append(CandyFall())
@@ -371,26 +400,35 @@ class MovieTheaterFrog(arcade.Window):
         # grows progress bar when level requires eating 10 popcorn
         self.popcorn_missed_bar -= (500 * (1 / 3))
         self.popcorn_missed_game_end()
+
     def hand_movement(self):
         # Moves hand depending on player location
         if self.level in BOSS_BATTLES:
             if self.hand1.center_y >= WINDOW_HEIGHT / 2:
-                if self.hand1.center_x < self.body.center_x:
-                    self.hand1.move_right()
-                elif self.hand1.center_x > self.body.center_x:
-                    self.hand1.move_left()
+                self.hand_boss_battles()
             if self.level == MIDDLE_BATTLE and self.hand1.center_y < WINDOW_HEIGHT / 2:
                 self.hand1.change_y = 5
             if self.level == FINAL_BATTLE and self.hand1.center_y < WINDOW_HEIGHT / 2:
                 self.hand1.change_y = 5
             if self.level == FINAL_BATTLE:
-                if self.hand2.center_y >= WINDOW_HEIGHT * (3 / 4):
-                    if self.hand2.center_x < self.body.center_x:
-                        self.hand2.move_right()
-                    elif self.hand2.center_x > self.body.center_x:
-                        self.hand2.move_left()
-                else:
-                    self.hand2.change_y = 5
+                self.hand_final_battle()
+
+    def hand_boss_battles(self):
+        # moves hand in boss battle
+        if self.hand1.center_x < self.body.center_x:
+            self.hand1.move_right()
+        elif self.hand1.center_x > self.body.center_x:
+            self.hand1.move_left()
+
+    def hand_final_battle(self):
+        # moves hand in final battle
+        if self.hand2.center_y >= WINDOW_HEIGHT * (3 / 4):
+            if self.hand2.center_x < self.body.center_x:
+                self.hand2.move_right()
+            elif self.hand2.center_x > self.body.center_x:
+                self.hand2.move_left()
+        else:
+            self.hand2.change_y = 5
 
     def hand1_reset(self):
         # Resets hand 1 when it reaches the bottom of the screen and tracks amount of times
@@ -448,7 +486,6 @@ class MovieTheaterFrog(arcade.Window):
         self.body.tongue_end_x = x
         self.body.tongue_end_y = y
         copy_of_popcorn = self.popsprite_list[:]
-        copy_of_candy = self.candysprite_list[:]
         for popcorn in copy_of_popcorn:
             if popcorn.collides_with_point([x, y]):
                 popcorn.remove_from_sprite_lists()
@@ -459,6 +496,7 @@ class MovieTheaterFrog(arcade.Window):
                     self.progress_end += 100
                 elif self.level in EAT_10:
                     self.progress_end += 50
+        copy_of_candy = self.candysprite_list[:]
         for candy in copy_of_candy:
             if candy.collides_with_point([x, y]):
                 candy.remove_from_sprite_lists()
@@ -469,6 +507,14 @@ class MovieTheaterFrog(arcade.Window):
                     self.progress_end -= 100
                 elif self.level in EAT_10:
                     self.progress_end -= 50
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        if self.current_state == INSTRUCTION_PAGE:
+            self.current_state = GAME_RUNNING
+        if self.current_state == END_GAME:
+            self.setup()
+            self.current_state = GAME_RUNNING
+
 
 
 def main():
