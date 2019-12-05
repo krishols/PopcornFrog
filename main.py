@@ -13,7 +13,7 @@ import arcade.key
 
 class MovieTheaterFrog(arcade.Window):
     def __init__(self, x=0, y=0):
-        #Initialize variables
+        # Initialize variables
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE)
         self.frogsprite_list = None
         self.popsprite_list = None
@@ -54,7 +54,7 @@ class MovieTheaterFrog(arcade.Window):
         self.allow_jumjp = False
 
     def setup(self):
-        #Setup the game (or reset the game)
+        # Setup the game (or reset the game)
         arcade.set_background_color(BACKGROUND_COLOR)
         self.frogsprite_list = arcade.SpriteList()
         self.popsprite_list = arcade.SpriteList()
@@ -88,7 +88,7 @@ class MovieTheaterFrog(arcade.Window):
         self.allow_jump = True
 
     def on_draw(self):
-        #Called when it is time to draw the world
+        # Called when it is time to draw the world
         arcade.start_render()
         if not self.end_game:
             self.draw_game()
@@ -98,6 +98,7 @@ class MovieTheaterFrog(arcade.Window):
             arcade.draw_text("You won!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
 
     def on_update(self, delta_time):
+        # update functions
         if self.progress_end == 500:
             self.progress_level()
         self.frogsprite_list[0].update()
@@ -115,26 +116,30 @@ class MovieTheaterFrog(arcade.Window):
         self.on_draw()
         self.hand_collisions()
         self.PhysicsEngine.update()
-        self.spawn_platforms()
+        self.control_rising_popcorn()
         self.rising_pop_collisions()
         self.check_candy_pop_collision()
 
     def progress_level(self):
+        # progresses  to next level when current level is completed
         self.level += 1
         self.progress_end = 0
         self.popcorn_missed_bar = 500
 
     def hand_boss(self):
+        # directs hand chasing frog
         self.handsprite_list[0].update()
         self.hand_movement()
         self.hand1_reset()
 
     def hand_final(self):
+        # directs hand in final boss
         self.handsprite_list[1].update()
         self.hand_movement()
         self.hand2_reset()
 
     def draw_game(self):
+        # draw basic game elements
         self.draw_instructions()
         self.floor1.draw()
         self.floor2.draw()
@@ -147,15 +152,18 @@ class MovieTheaterFrog(arcade.Window):
         self.draw_boss_levels()
 
     def draw_rising_levels(self):
+        # draw rising popcorn and tiles
         if self.level in RISING_POP_LEVELS:
             self.tilesprite_list.draw()
             self.rising_popcorn.draw()
 
     def draw_candy_levels(self):
+        # draw candy sprites
         if self.level in CANDY_LEVELS:
             self.candysprite_list.draw()
 
     def draw_boss_levels(self):
+        # draw hand trying to capture frog
         if self.level in BOSS_BATTLES:
             self.hand1.draw()
             if self.level == FINAL_BATTLE:
@@ -166,53 +174,77 @@ class MovieTheaterFrog(arcade.Window):
                          color=[50, 205, 50])
 
     def draw_lose_game(self):
+        # draw lose game screen
         if self.lost_game:
             arcade.draw_text("Game over!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
 
-
-    def spawn_platforms(self):
-        #Creates platforms for frogs to jump on
+    def control_rising_popcorn(self):
+        # Creates platforms for frogs to jump on
         if self.level in RISING_POP_LEVELS:
-            if len(self.rising_popcorn) == 0:
-                self.tilesprite_list.append(platform_tile())
-                self.tilesprite_list.append(platform_tile())
-                self.tile1 = self.tilesprite_list[0]
-                self.tile1.center_x = 100
-                self.tile1.center_y = 200
-                self.tile2 = self.tilesprite_list[1]
-                self.tile2.center_x = 400
-                self.tile2.center_y = 200
-                self.PhysicsEngine2 = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tilesprite_list,
-                                                                     gravity_constant=GRAVITY)
-                self.PhysicsEngine2.update()
-                self.rising_popcorn.append(RisingPopcorn())
+            self.spawn_tiles()
         elif self.level not in RISING_POP_LEVELS:
-            for rising_popcorn in self.rising_popcorn:
                 self.PhysicsEngine2 = None
         if self.level == 4:
-            if self.rising_popcorn[0].center_y <= -10:
-                self.rising_popcorn[0].update()
-                self.PhysicsEngine2.update()
+            self.level_4_pop()
         if self.level == 7:
-            if self.rising_popcorn[0].center_y <= -10:
-                self.rising_popcorn[0].change_y = 1.5
-                self.rising_popcorn[0].update()
-                self.PhysicsEngine2.update()
+            self.level_7_pop()
         if self.level == 10:
+            self.level_10_pop()
+
+    def spawn_tiles(self):
+        # draws tiles for rising popcorn levels
+        if len(self.rising_popcorn) == 0:
             self.tilesprite_list.append(platform_tile())
-            self.tile3 = self.tilesprite_list[2]
-            self.tile3.center_x = 250
-            self.tile3.center_y = 350
+            self.tilesprite_list.append(platform_tile())
+            self.tile1 = self.tilesprite_list[0]
+            self.tile1.center_x = 100
+            self.tile1.center_y = 200
+            self.tile2 = self.tilesprite_list[1]
+            self.tile2.center_x = 400
+            self.tile2.center_y = 200
+            self.PhysicsEngine2 = arcade.PhysicsEnginePlatformer(self.body, platforms=self.tilesprite_list,
+                                                                 gravity_constant=GRAVITY)
             self.PhysicsEngine2.update()
-            if self.rising_popcorn[0].center_y <= 250:
-                self.rising_popcorn[0].change_y = 1.5
-                self.rising_popcorn[0].update()
-                self.PhysicsEngine2.update()
-            if self.body.center_y > 500:
-                self.end_game = True
-                self.won_game = True
+            self.rising_popcorn.append(RisingPopcorn())
+
+    def level_4_pop(self):
+        # directs rising popcorn in level 4
+        if self.rising_popcorn[0].center_y <= -10:
+            self.rising_popcorn[0].update()
+            self.PhysicsEngine2.update()
+
+    def level_7_pop(self):
+        # directs rising popcorn in level 7
+        if self.rising_popcorn[0].center_y <= -10:
+            self.rising_popcorn[0].change_y = 1.5
+            self.rising_popcorn[0].update()
+            self.PhysicsEngine2.update()
+
+    def level_10_pop(self):
+        # directs level 10
+        self.tilesprite_list.append(platform_tile())
+        self.tile3 = self.tilesprite_list[2]
+        self.tile3.center_x = 250
+        self.tile3.center_y = 350
+        self.PhysicsEngine2.update()
+        if self.rising_popcorn[0].center_y <= 250:
+            self.level_10_rising()
+        if self.body.center_y > 500:
+            self.level_10_win_game()
+
+    def level_10_rising(self):
+        # directs rising popcorn in level 10
+        self.rising_popcorn[0].change_y = 1.5
+        self.rising_popcorn[0].update()
+        self.PhysicsEngine2.update()
+
+    def level_10_win_game(self):
+        # changes game status to won
+        self.end_game = True
+        self.won_game = True
 
     def check_candy_pop_collision(self):
+        # checks and prevents candy and popcorn from colliding on top of one another
         for popcorn in self.popsprite_list:
             if popcorn.collides_with_list(self.candysprite_list):
                 popcorn.center_y += 50
@@ -276,21 +308,29 @@ class MovieTheaterFrog(arcade.Window):
                              width=0, align="center")
 
     def spawn_candy(self):
-        # Spawns popcorn to randomly fall from the top of the screen
+        # Spawns candy to randomly fall from the top of the screen
         if self.level in CANDY_LEVELS and self.level not in MORE_CANDY:
-            if self.timer % 300 == 0:
-                self.candy_counter += 1
-                self.candysprite_list.append(CandyFall())
-                self.candysprite_list[self.candy_counter].center_x = randint(50, 450)
-                if self.level in FASTER_FALL:
-                    self.candysprite_list[self.candy_counter].change_y = 3
+            self.not_more_candy()
         elif self.level in CANDY_LEVELS and self.level in MORE_CANDY:
-            if self.timer % 150 == 0:
-                self.candy_counter += 1
-                self.candysprite_list.append(CandyFall())
-                self.candysprite_list[self.candy_counter].center_x = randint(50, 450)
-                if self.level in FASTER_FALL:
-                    self.candysprite_list[self.candy_counter].change_y = 3
+            self.more_candy()
+
+    def not_more_candy(self):
+        # spawns candy for levels not requiring more candy
+        if self.timer % 300 == 0:
+            self.candy_counter += 1
+            self.candysprite_list.append(CandyFall())
+            self.candysprite_list[self.candy_counter].center_x = randint(50, 450)
+            if self.level in FASTER_FALL:
+                self.candysprite_list[self.candy_counter].change_y = 3
+
+    def more_candy(self):
+        #spawns candy for levels requiring more candy
+        if self.timer % 150 == 0:
+            self.candy_counter += 1
+            self.candysprite_list.append(CandyFall())
+            self.candysprite_list[self.candy_counter].center_x = randint(50, 450)
+            if self.level in FASTER_FALL:
+                self.candysprite_list[self.candy_counter].change_y = 3
 
     def update_timer(self):
         # Updates timer and resets when timer hits max
@@ -318,12 +358,19 @@ class MovieTheaterFrog(arcade.Window):
                 self.off_screen_calculator()
                 popcorn.remove_from_sprite_lists()
                 if self.level in EAT_5:
-                    self.popcorn_missed_bar -= (500 * (1 / 5))
-                    self.popcorn_missed_game_end()
+                    self.eat_5()
                 elif self.level in EAT_10:
-                    self.popcorn_missed_bar -= (500 * (1 / 3))
-                    self.popcorn_missed_game_end()
+                    self.eat_10()
 
+    def eat_5(self):
+        # grows progress bar when level requires eating 5 popcorn
+        self.popcorn_missed_bar -= (500 * (1 / 5))
+        self.popcorn_missed_game_end()
+
+    def eat_10(self):
+        # grows progress bar when level requires eating 10 popcorn
+        self.popcorn_missed_bar -= (500 * (1 / 3))
+        self.popcorn_missed_game_end()
     def hand_movement(self):
         # Moves hand depending on player location
         if self.level in BOSS_BATTLES:
