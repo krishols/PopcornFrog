@@ -146,9 +146,12 @@ class MovieTheaterFrog(arcade.Window):
             self.check_candy_pop_collision()
             self.update_lose_game()
             self.update_win_game()
+            self.popcorn_missed_game_end()
 
     def progress_level(self):
         # progresses  to next level when current level is completed
+        if self.level in RISING_POP_LEVELS:
+            self.rising_popcorn[0].center_y = -300
         self.level += 1
         self.progress_end = 0
         self.popcorn_missed_bar = 500
@@ -164,6 +167,7 @@ class MovieTheaterFrog(arcade.Window):
         self.handsprite_list[1].update()
         self.hand_movement()
         self.hand2_reset()
+
 
     def draw_game_elements(self):
         # draw basic game elements
@@ -205,10 +209,6 @@ class MovieTheaterFrog(arcade.Window):
         arcade.draw_line(start_x=10, start_y=10, end_x=10, end_y=self.progress_end, line_width=10,
                          color=[50, 205, 50])
 
-    def draw_lose_game(self):
-        # draw lose game screen
-        if self.lost_game:
-            arcade.draw_text("Game over! \n Click the mouse \n to try again.", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25, align="center")
 
     def control_rising_popcorn(self):
         # Creates platforms for frogs to jump on
@@ -274,7 +274,6 @@ class MovieTheaterFrog(arcade.Window):
 
     def level_10_win_game(self):
         # changes game status to won
-        self.end_game = True
         self.won_game = True
 
     def check_candy_pop_collision(self):
@@ -531,12 +530,6 @@ class MovieTheaterFrog(arcade.Window):
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         if self.current_state == INSTRUCTION_PAGE:
             self.current_state = GAME_RUNNING
-        elif self.end_game:
-            self.end_game = False
-            self.won_game = False
-            self.lost_game = False
-            self.current_state = INSTRUCTION_PAGE
-
 
 
 
