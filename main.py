@@ -54,6 +54,8 @@ class MovieTheaterFrog(arcade.Window):
         self.allow_jump = False
         self.instructions = []
         self.instructions.append(INSTRUCTION_SCREEN)
+        self.instructions.append(LOSE_SCREEN)
+        self.instructions.append(WON_SCREEN)
         self.current_state = INSTRUCTION_PAGE
 
     def setup(self):
@@ -107,40 +109,44 @@ class MovieTheaterFrog(arcade.Window):
 
             elif self.current_state == GAME_RUNNING:
                 self.draw_game()
-
+            elif self.current_state == END_GAME:
+                self.draw_instructions_page(1)
+            elif self.current_state == WON_GAME:
+                self.draw_instructions_page(2)
 
     def draw_game(self):
         # Called when it is time to draw the world
         arcade.start_render()
         if not self.end_game:
             self.draw_game_elements()
-        elif self.end_game:
-            self.draw_lose_game()
-        if self.won_game:
-            arcade.draw_text("You won!", start_x=150, start_y=250, color=arcade.color.WHITE_SMOKE, font_size=25)
+
 
     def on_update(self, delta_time):
         # update functions
-        if self.progress_end == 500:
-            self.progress_level()
-        self.frogsprite_list[0].update()
-        self.popsprite_list.update()
-        if self.level in CANDY_LEVELS:
-            self.candysprite_list.update()
-        if self.level in BOSS_BATTLES:
-            self.hand_boss()
-            if self.level == FINAL_BATTLE:
-                self.hand_final()
-        self.spawn_popcorn()
-        self.update_timer()
-        self.spawn_candy()
-        self.off_screen_counter()
-        self.on_draw()
-        self.hand_collisions()
-        self.PhysicsEngine.update()
-        self.control_rising_popcorn()
-        self.rising_pop_collisions()
-        self.check_candy_pop_collision()
+        if self.current_state == GAME_RUNNING:
+            if self.progress_end == 500:
+                self.progress_level()
+            self.frogsprite_list[0].update()
+            self.popsprite_list.update()
+            if self.level in CANDY_LEVELS:
+                self.candysprite_list.update()
+            if self.level in BOSS_BATTLES:
+                self.hand_boss()
+                if self.level == FINAL_BATTLE:
+                    self.hand_final()
+            self.spawn_popcorn()
+            self.update_timer()
+            self.spawn_candy()
+            self.off_screen_counter()
+            self.on_draw()
+            self.hand_collisions()
+            self.PhysicsEngine.update()
+            self.control_rising_popcorn()
+            self.rising_pop_collisions()
+            self.check_candy_pop_collision()
+            self.update_lose_game()
+            self.update_win_game()
+
 
 
     def progress_level(self):
@@ -286,6 +292,15 @@ class MovieTheaterFrog(arcade.Window):
         self.popsprite_list[self.popcorn_counter].center_x = randint(50, 450)
         if self.level in FASTER_FALL:
             self.popsprite_list[self.popcorn_counter].change_y = 3
+
+    def update_lose_game(self):
+        # updates current state after game is lost
+        if self.lost_game:
+            self.current_state = END_GAME
+
+    def update_win_game(self):
+        if self.won_game:
+            self.current_state = WON_GAME
 
     def draw_instructions(self):
         # Draws instructions for the game
@@ -463,22 +478,24 @@ class MovieTheaterFrog(arcade.Window):
 
     def on_key_press(self, symbol: int, modifiers: int):
         # Moves frog left and right and jumps
-        if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
-            self.frogsprite_list[0].change_x = MOVEMENT_SPEED
-        elif symbol == arcade.key.A or symbol == arcade.key.LEFT:
-            self.frogsprite_list[0].change_x = -MOVEMENT_SPEED
-        elif symbol == arcade.key.W or symbol == arcade.key.UP:
-            if self.PhysicsEngine.can_jump() or self.PhysicsEngine2.can_jump():
-                self.body.change_y = 15
+        if self.current_state == GAME_RUNNING:
+            if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
+                self.frogsprite_list[0].change_x = MOVEMENT_SPEED
+            elif symbol == arcade.key.A or symbol == arcade.key.LEFT:
+                self.frogsprite_list[0].change_x = -MOVEMENT_SPEED
+            elif symbol == arcade.key.W or symbol == arcade.key.UP:
+                if self.PhysicsEngine.can_jump() or self.PhysicsEngine2.can_jump():
+                    self.body.change_y = 15
 
     def on_key_release(self, symbol: int, modifiers: int):
         # Stops frog from movements
-        if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
-            self.body.change_x = 0
-        elif symbol == arcade.key.A or symbol == arcade.key.LEFT:
-            self.body.change_x = 0
-        elif symbol == arcade.key.W or symbol == arcade.key.UP:
-            self.body.change_y = 0
+        if self.current_state == GAME_RUNNING:
+            if symbol == arcade.key.D or symbol == arcade.key.RIGHT:
+                self.body.change_x = 0
+            elif symbol == arcade.key.A or symbol == arcade.key.LEFT:
+                self.body.change_x = 0
+            elif symbol == arcade.key.W or symbol == arcade.key.UP:
+                self.body.change_y = 0
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         # Tracks mouse movement and controls frog tongue
@@ -510,6 +527,13 @@ class MovieTheaterFrog(arcade.Window):
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         if self.current_state == INSTRUCTION_PAGE:
             self.current_state = GAME_RUNNING
+        elif self.end_game:
+            self.setup()
+            self.end_game = False
+            self.won_game = False
+            self.lost_game = False
+            self.current_state = INSTRUCTION_PAGE
+
 
 
 
