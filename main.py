@@ -6,7 +6,7 @@ from random import randint
 from Candy import CandyFall
 from Hand import HandBoss
 from Table import Table
-from platform_tile import platform_tile
+from platform_tile import PlatformTile
 from filling_popcorn import RisingPopcorn
 import arcade.key
 
@@ -54,7 +54,6 @@ class MovieTheaterFrog(arcade.Window):
         self.allow_jump = False
         self.instructions = []
         self.instructions.append(INSTRUCTION_SCREEN)
-
         self.current_state = INSTRUCTION_PAGE
 
     def setup(self):
@@ -219,8 +218,8 @@ class MovieTheaterFrog(arcade.Window):
     def spawn_tiles(self):
         # draws tiles for rising popcorn levels
         if len(self.rising_popcorn) == 0:
-            self.tilesprite_list.append(platform_tile())
-            self.tilesprite_list.append(platform_tile())
+            self.tilesprite_list.append(PlatformTile())
+            self.tilesprite_list.append(PlatformTile())
             self.tile1 = self.tilesprite_list[0]
             self.tile1.center_x = 100
             self.tile1.center_y = 200
@@ -247,7 +246,7 @@ class MovieTheaterFrog(arcade.Window):
 
     def level_10_pop(self):
         # directs level 10
-        self.tilesprite_list.append(platform_tile())
+        self.tilesprite_list.append(PlatformTile())
         self.tile3 = self.tilesprite_list[2]
         self.tile3.center_x = 250
         self.tile3.center_y = 350
@@ -510,9 +509,6 @@ class MovieTheaterFrog(arcade.Window):
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         if self.current_state == INSTRUCTION_PAGE:
-            self.current_state = GAME_RUNNING
-        if self.current_state == END_GAME:
-            self.setup()
             self.current_state = GAME_RUNNING
 
 
