@@ -391,13 +391,13 @@ class MovieTheaterFrog(arcade.Window):
         self.popcorn_counter -= 1
 
     def popcorn_missed_game_end(self):
-        """Ends game if enough popcorn falls off screen"""
+        #Ends game if enough popcorn falls off screen
         if self.popcorn_missed_bar == 0:
             self.end_game = True
             self.lost_game = True
 
     def off_screen_counter(self):
-        """Tracks the amount of popcorn the falls off screen"""
+        #Tracks the amount of popcorn the falls off screen
         copy_of_counter = self.popsprite_list[:]
         for popcorn in copy_of_counter:
             if popcorn.off_screen_test():
@@ -530,6 +530,7 @@ class MovieTheaterFrog(arcade.Window):
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         if self.current_state == INSTRUCTION_PAGE:
             self.current_state = GAME_RUNNING
+
 
 
 
