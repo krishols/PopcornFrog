@@ -309,7 +309,7 @@ class MovieTheaterFrog(arcade.Window):
         # Draws instructions for the game
         if self.level == 1:
             arcade.draw_text(
-                "You are a frog trapped in a movie theatre \n popcorn machine. Eat popcorn to fill the frog's \n hunger bar! \n If you miss a popcorn your health bar goes down.",
+                "Eat popcorn to fill the frog's \n hunger bar! \n If you miss a popcorn your health bar goes down.",
                 start_x=75, start_y=325, color=arcade.color.WHITE_SMOKE, font_size=12, width=0, align="center")
         elif self.level == 2:
             arcade.draw_text("Don't eat the candy, you'll lose hunger points!", start_x=125, start_y=325,
