@@ -1,0 +1,15 @@
+arcade == 2.1.7  
+attrs == 19.3.0 
+cffi == 1.14.3 
+future == 0.18.2 
+numpy == 1.17.4 
+Pillow == 6.2.1  
+pip == 19.0.3 
+pycparser == 2.20   
+pygame == 1.9.6  
+pyglet == 1.5.8  
+pyglet-ffmpeg2 == 0.1.15 
+pymunk == 5.7.0  
+pytiled-parser == 0.9.4a3
+PyYAML == 5.3.1  
+setuptools == 40.8.0 
