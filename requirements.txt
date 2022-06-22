@@ -2,7 +2,7 @@ arcade == 2.1.7
 attrs == 19.3.0 
 cffi == 1.14.3 
 future == 0.18.2 
-numpy == 1.17.4 
+numpy == 1.22.0 
 Pillow >= 7.1.0 
 pip == 19.0.3 
 pycparser == 2.20   
