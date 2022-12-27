@@ -12,4 +12,4 @@ pyglet-ffmpeg2 == 0.1.15
 pymunk == 5.7.0  
 pytiled-parser == 0.9.4a3
 PyYAML == 5.3.1  
-setuptools == 40.8.0 
+setuptools == 65.5.1 
